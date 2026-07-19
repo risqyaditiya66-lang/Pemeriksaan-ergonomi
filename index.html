@@ -3,22 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>Pemeriksaan Ergonomi • Nordic Body Map</title>
+    <title>Ergonomi 5 Langkah · Nordic Body Map</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #f9f7f4;
+            --bg: #f9f7fd;
             --surface: #ffffff;
-            --primary: #6b7b8d;
-            --primary-light: #eef2f6;
-            --accent: #c49a8c;
-            --accent-light: #faeae5;
-            --text: #2e3a45;
-            --text-secondary: #5f6c7a;
-            --border: #e6dfd7;
-            --shadow: 0 4px 24px rgba(0, 0, 0, 0.04);
+            --primary: #7c3aed;
+            --primary-light: #ede9fe;
+            --accent: #a855f7;
+            --accent-light: #f3e8ff;
+            --text: #2d1b4e;
+            --text-secondary: #6b5b7c;
+            --border: #e0d5f0;
+            --shadow: 0 4px 24px rgba(124, 58, 237, 0.06);
             --radius: 20px;
-            --radius-sm: 12px;
+            --radius-sm: 14px;
         }
         * {
             margin: 0;
@@ -33,43 +33,20 @@
             align-items: center;
             justify-content: center;
             padding: 12px;
-            position: relative;
             -webkit-tap-highlight-color: transparent;
-        }
-        body::before {
-            content: '';
-            position: fixed;
-            top: -120px;
-            right: -120px;
-            width: 400px;
-            height: 400px;
-            background: radial-gradient(circle, rgba(196, 154, 140, 0.08) 0%, transparent 70%);
-            border-radius: 50%;
-            z-index: 0;
-            pointer-events: none;
-        }
-        body::after {
-            content: '';
-            position: fixed;
-            bottom: -80px;
-            left: -80px;
-            width: 350px;
-            height: 350px;
-            background: radial-gradient(circle, rgba(107, 123, 141, 0.06) 0%, transparent 70%);
-            border-radius: 50%;
-            z-index: 0;
-            pointer-events: none;
+            background-image: radial-gradient(ellipse at 20% 10%, rgba(168, 85, 247, 0.08) 0%, transparent 55%),
+                radial-gradient(ellipse at 80% 90%, rgba(124, 58, 237, 0.07) 0%, transparent 55%);
         }
         .app-container {
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
             background: var(--surface);
             border-radius: 28px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.06);
+            box-shadow: 0 20px 60px rgba(124, 58, 237, 0.08);
             padding: 20px 16px;
             position: relative;
             z-index: 1;
-            border: 1px solid rgba(230, 223, 215, 0.8);
+            border: 1px solid rgba(224, 213, 240, 0.9);
         }
         .header {
             text-align: center;
@@ -79,12 +56,12 @@
             display: inline-block;
             width: 44px;
             height: 44px;
-            background: linear-gradient(135deg, #eef2f6, #faeae5);
+            background: linear-gradient(135deg, #ede9fe, #f3e8ff);
             border-radius: 14px;
             margin-bottom: 6px;
             line-height: 44px;
             font-size: 24px;
-            transition: 0.3s;
+            box-shadow: 0 2px 12px rgba(124, 58, 237, 0.08);
         }
         .header h1 {
             font-weight: 700;
@@ -110,13 +87,13 @@
         }
         .progress-track {
             height: 5px;
-            background: #ede8e2;
+            background: #ede8f2;
             border-radius: 10px;
             overflow: hidden;
         }
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg, #6b7b8d, #c49a8c);
+            background: linear-gradient(90deg, #7c3aed, #a855f7);
             border-radius: 10px;
             transition: width 0.5s ease;
             width: 0%;
@@ -152,8 +129,8 @@
         .step-circle {
             width: 26px;
             height: 26px;
-            background: #f0f4f8;
-            color: #6b7b8d;
+            background: #ede9fe;
+            color: #7c3aed;
             border-radius: 10px;
             display: flex;
             align-items: center;
@@ -173,40 +150,78 @@
             margin-bottom: 14px;
             line-height: 1.5;
         }
-        .input-box {
-            margin-bottom: 12px;
-            position: relative;
+        .age-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin-bottom: 14px;
         }
-        .input-box label {
-            display: block;
+        .age-card {
+            background: #faf8fd;
+            border: 2px solid #e0d5f0;
+            border-radius: 18px;
+            padding: 16px 14px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.25s;
+            touch-action: manipulation;
+            user-select: none;
+        }
+        .age-card:active {
+            background: #f3e8ff;
+            transform: scale(0.98);
+        }
+        .age-card.selected-age {
+            border-color: #7c3aed;
+            background: #ede9fe;
+            box-shadow: 0 0 0 6px rgba(124, 58, 237, 0.08);
+        }
+        .age-emoji {
+            font-size: 2.2rem;
+            background: #ffffff;
+            border-radius: 16px;
+            width: 54px;
+            height: 54px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+            flex-shrink: 0;
+        }
+        .age-info {
+            flex: 1;
+        }
+        .age-label {
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: #2d1b4e;
+        }
+        .age-range {
+            font-size: 0.7rem;
+            color: #7c3aed;
             font-weight: 600;
-            font-size: 0.72rem;
-            color: #4a5568;
-            margin-bottom: 3px;
+            margin-top: 2px;
         }
-        .input-box input,
-        .input-box select {
-            width: 100%;
-            padding: 10px 12px;
-            border: 1.5px solid #e2dcd4;
-            border-radius: 12px;
-            font-family: inherit;
-            font-size: 0.85rem;
-            background: #fcfbf9;
+        .age-check {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            border: 2px solid #d5c8e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.7rem;
+            color: transparent;
             transition: 0.2s;
-            outline: none;
-            color: var(--text);
-            -webkit-appearance: none;
+            flex-shrink: 0;
         }
-        .input-box input:focus,
-        .input-box select:focus {
-            border-color: #6b7b8d;
-            background: #fff;
-            box-shadow: 0 0 0 4px rgba(107, 123, 141, 0.08);
-        }
-        .input-error {
-            border-color: #e07a6e !important;
-            background: #fff8f7 !important;
+        .age-card.selected-age .age-check {
+            background: #7c3aed;
+            border-color: #7c3aed;
+            color: #fff;
+            font-weight: 700;
         }
         .error-msg {
             font-size: 0.65rem;
@@ -219,151 +234,28 @@
         .error-msg.show {
             display: flex;
         }
-        .selected-summary {
-            background: #faf9f7;
-            border-radius: 12px;
-            padding: 8px 10px;
-            margin-bottom: 12px;
-            border: 1px dashed #d4ccc2;
-            font-size: 0.7rem;
-            color: #5f6c7a;
-            display: flex;
-            flex-wrap: wrap;
-            gap: 4px;
-            align-items: center;
-        }
-        .summary-badge {
-            background: #faeae5;
-            color: #8b4a3a;
-            padding: 3px 10px;
-            border-radius: 20px;
-            font-weight: 600;
-            font-size: 0.7rem;
-            display: inline-flex;
-            align-items: center;
-            gap: 3px;
-            border: 1px solid #e2ccca;
-        }
-        .no-selection {
-            color: #9a8e84;
-            font-style: italic;
-        }
-        .nordic-grid {
+        .option-grid {
             display: flex;
             flex-direction: column;
-            gap: 6px;
-            margin-bottom: 10px;
+            gap: 8px;
+            margin: 10px 0;
         }
-        .nordic-item {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 8px 10px;
-            background: #faf9f7;
-            border-radius: 12px;
-            cursor: pointer;
-            transition: all 0.2s;
-            border: 2px solid transparent;
-            font-size: 0.78rem;
-            font-weight: 500;
-            gap: 6px;
-            touch-action: manipulation;
-        }
-        .nordic-item:active {
-            background: #f0ece6;
-        }
-        .nordic-item.active-nordic {
-            background: #fff5f2;
-            border-color: #c49a8c;
-            box-shadow: 0 0 0 4px rgba(196, 154, 140, 0.12);
-        }
-        .pain-selector {
-            display: flex;
-            gap: 6px;
-            flex-shrink: 0;
-            flex-wrap: nowrap;
-        }
-        .pain-dot {
-            width: 28px;
-            height: 28px;
-            border-radius: 50%;
-            background: #fff;
-            border: 2px solid #d4ccc2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #8a7e72;
-            cursor: pointer;
-            transition: 0.15s;
-            touch-action: manipulation;
-        }
-        .pain-dot:active {
-            transform: scale(1.1);
-        }
-        .pain-dot.l1 {
-            border-color: #dbbfaa;
-            background: #fff9f5;
-            color: #b07e62;
-        }
-        .pain-dot.l2 {
-            border-color: #c99e82;
-            background: #fff2e8;
-            color: #9b5e43;
-        }
-        .pain-dot.l3 {
-            border-color: #b57555;
-            background: #ffe4d6;
-            color: #7b422b;
-        }
-        .pain-dot.l4 {
-            border-color: #9c4a32;
-            background: #ffcfba;
-            color: #5a2a1a;
-            font-weight: 900;
-        }
-        .pain-dot.active-dot {
-            transform: scale(1.2);
-            box-shadow: 0 0 0 5px rgba(196, 154, 140, 0.15);
-            border-width: 2.5px;
-        }
-        .habit-grid {
-            display: flex;
-            flex-direction: column;
-            gap: 6px;
-        }
-        .habit-option {
-            background: #faf9f7;
+        .option-item {
+            background: #faf8fd;
+            border: 2px solid #e0d5f0;
             border-radius: 14px;
             padding: 12px;
-            text-align: center;
             cursor: pointer;
-            border: 2px solid transparent;
-            transition: 0.2s;
             font-weight: 500;
             font-size: 0.8rem;
+            transition: 0.2s;
+            text-align: center;
             touch-action: manipulation;
         }
-        .habit-option:active {
-            background: #f0ece6;
-        }
-        .habit-option.selected-habit {
-            background: #eef2f6;
-            border-color: #6b7b8d;
-            box-shadow: 0 0 0 4px rgba(107, 123, 141, 0.06);
-        }
-        .habit-question {
-            margin-bottom: 14px;
-            transition: 0.3s;
-        }
-        .habit-question.highlight-error {
-            background: #fff5f5;
-            border: 2px solid #e07a6e;
-            border-radius: 14px;
-            padding: 10px;
-            margin: -10px;
-            margin-bottom: 14px;
+        .option-item.selected-option {
+            background: #ede9fe;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.06);
         }
         .btn-group {
             display: flex;
@@ -373,48 +265,56 @@
             margin-top: 14px;
         }
         .btn {
-            padding: 10px 18px;
+            padding: 12px 20px;
             border-radius: 36px;
             font-weight: 600;
-            font-size: 0.8rem;
+            font-size: 0.82rem;
             border: none;
             cursor: pointer;
             font-family: inherit;
             transition: 0.25s;
             display: inline-flex;
             align-items: center;
-            gap: 5px;
-            letter-spacing: 0.2px;
+            gap: 6px;
             touch-action: manipulation;
+            text-decoration: none;
+            justify-content: center;
         }
         .btn-primary {
-            background: #6b7b8d;
+            background: #7c3aed;
             color: #fff;
-            box-shadow: 0 6px 18px rgba(107, 123, 141, 0.2);
+            box-shadow: 0 6px 18px rgba(124, 58, 237, 0.25);
         }
         .btn-primary:active {
-            background: #596a7a;
+            background: #6d28d9;
             transform: scale(0.97);
         }
         .btn-secondary {
             background: #fff;
-            color: #6b7b8d;
-            border: 2px solid #dce3ea;
+            color: #7c3aed;
+            border: 2px solid #ddd0f0;
         }
         .btn-accent {
-            background: #c49a8c;
+            background: #a855f7;
             color: #fff;
-            box-shadow: 0 6px 18px rgba(196, 154, 140, 0.2);
+            box-shadow: 0 6px 18px rgba(168, 85, 247, 0.25);
         }
         .btn-outline {
             background: transparent;
-            border: 2px solid #cfc8be;
-            color: #5a6b7a;
+            border: 2px solid #d5c8e8;
+            color: #5b3d8a;
+        }
+        .btn-map {
+            background: #2d1b4e;
+            color: #fff;
+            box-shadow: 0 6px 18px rgba(45, 27, 78, 0.25);
+            width: 100%;
+            margin-top: 12px;
         }
         .score-circle {
-            font-size: 3.5rem;
+            font-size: 3rem;
             font-weight: 800;
-            background: linear-gradient(135deg, #6b7b8d, #c49a8c);
+            background: linear-gradient(135deg, #7c3aed, #a855f7);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
             background-clip: text;
@@ -422,53 +322,161 @@
         }
         .badge {
             display: inline-block;
-            padding: 5px 16px;
+            padding: 6px 18px;
             border-radius: 30px;
             font-weight: 700;
-            font-size: 0.75rem;
-            letter-spacing: 0.3px;
+            font-size: 0.78rem;
         }
         .badge-low {
-            background: #e1ece2;
-            color: #2f4b33;
+            background: #dcefe0;
+            color: #1e4a2c;
         }
         .badge-med {
-            background: #f6ecdb;
-            color: #6b4f2c;
+            background: #fdf0d5;
+            color: #6b4f1c;
         }
         .badge-high {
-            background: #fbe0d8;
+            background: #fde0d8;
             color: #7a3020;
         }
         .badge-severe {
-            background: #f2cec6;
+            background: #f5cec6;
             color: #521f14;
         }
-        .area-badge {
-            display: inline-block;
-            background: #faeae5;
-            color: #8b4a3a;
-            padding: 4px 10px;
+        .nordic-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 10px 0;
+        }
+        .nordic-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px;
+            background: #faf8fd;
+            border-radius: 14px;
+            border: 2px solid transparent;
+            font-size: 0.8rem;
+            font-weight: 600;
+            gap: 8px;
+            touch-action: manipulation;
+        }
+        .nordic-item.active-nordic {
+            background: #f3e8ff;
+            border-color: #a855f7;
+            box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1);
+        }
+        .pain-selector {
+            display: flex;
+            gap: 8px;
+        }
+        .pain-dot {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #fff;
+            border: 2px solid #d5c8e8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.75rem;
+            font-weight: 700;
+            color: #8a7a9e;
+            cursor: pointer;
+            transition: 0.15s;
+            touch-action: manipulation;
+        }
+        .pain-dot.active-dot {
+            transform: scale(1.15);
+            box-shadow: 0 0 0 6px rgba(168, 85, 247, 0.15);
+            border-width: 2.5px;
+            background: #f3e8ff;
+            border-color: #a855f7;
+            color: #7c3aed;
+        }
+        .summary-badge {
+            background: #f3e8ff;
+            color: #6d28d9;
+            padding: 4px 12px;
             border-radius: 20px;
             font-weight: 600;
             font-size: 0.7rem;
-            margin: 2px 3px;
-            border: 1px solid #e2ccca;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            border: 1px solid #d8c4f0;
         }
-        .reco-list {
+        .analysis-block {
+            background: #faf8fd;
+            border-radius: var(--radius-sm);
+            padding: 14px;
+            margin: 12px 0;
             text-align: left;
-            list-style: none;
+            font-size: 0.78rem;
+            border-left: 4px solid #a855f7;
+            line-height: 1.6;
         }
-        .reco-list li {
-            padding: 8px 10px;
-            margin: 3px 0;
-            background: #faf9f7;
-            border-radius: 10px;
-            font-size: 0.75rem;
-            border-left: 4px solid #c49a8c;
+        .analysis-block h4 {
+            font-size: 0.85rem;
+            color: #5b3d8a;
+            margin-bottom: 6px;
             display: flex;
+            align-items: center;
             gap: 6px;
-            align-items: flex-start;
+        }
+        .domain-bar-bg {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-top: 4px;
+        }
+        .domain-bar-fill {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.8s ease;
+        }
+        .domain-low {
+            background: #27ae60;
+        }
+        .domain-mid {
+            background: #f39c12;
+        }
+        .domain-high {
+            background: #e74c3c;
+        }
+        .domain-item {
+            margin-bottom: 12px;
+        }
+        .domain-label {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 12px 0;
+            font-size: 0.7rem;
+        }
+        th {
+            background: #ede9fe;
+            padding: 8px 6px;
+            text-align: left;
+            font-weight: 600;
+        }
+        td {
+            padding: 8px 6px;
+            border-bottom: 1px solid #e0d5f0;
+            background: #fff;
+        }
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
         }
     </style>
 </head>
@@ -477,129 +485,103 @@
         <div class="header">
             <div class="logo" id="headerIcon">🧘</div>
             <h1>Pemeriksaan Ergonomi</h1>
-            <div class="subtitle">Nordic Body Map & Diagnosa Cepat</div>
+            <div class="subtitle">5 Langkah Menuju Kenyamanan Kerja</div>
         </div>
-
         <div class="progress-area">
-            <div class="progress-label">
-                <span id="progressText">Langkah 1 • Data Diri</span>
-                <span id="progressPercent">0%</span>
-            </div>
+            <div class="progress-label"><span id="progressText">Langkah 1 • Kategori Usia</span><span id="progressPercent">0%</span></div>
             <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
         </div>
 
         <!-- SECTION 1 -->
         <div class="card" id="section1">
-            <div class="section-head"><span class="step-circle">1</span><h2>Informasi Responden</h2></div>
-            <p class="section-desc">Lengkapi data dengan benar sebelum melanjutkan pemeriksaan.</p>
-            <div class="input-box">
-                <label>Nama Lengkap</label>
-                <input type="text" id="nama" placeholder="Masukkan nama">
-                <div class="error-msg" id="errNama">⚠️ Nama tidak boleh kosong</div>
-            </div>
-            <div class="input-box">
-                <label>Usia (tahun)</label>
-                <input type="number" id="usia" placeholder="25" min="15" max="80" inputmode="numeric" oninput="this.value = this.value.replace(/[^0-9]/g, '')">
-                <div class="error-msg" id="errUsia">⚠️ Usia harus antara 15-80 tahun</div>
-            </div>
-            <div class="input-box">
-                <label>Pekerjaan / Jabatan</label>
-                <input type="text" id="pekerjaan" placeholder="Staf Administrasi">
-                <div class="error-msg" id="errPekerjaan">⚠️ Pekerjaan tidak boleh kosong</div>
-            </div>
-            <div class="input-box">
-                <label>Jam Kerja per Hari</label>
-                <select id="jamKerja">
-                    <option value="">Pilih</option>
-                    <option value="<4">< 4 jam</option>
-                    <option value="4-6">4-6 jam</option>
-                    <option value="6-8">6-8 jam</option>
-                    <option value="8-10">8-10 jam</option>
-                    <option value=">10">> 10 jam</option>
-                </select>
-                <div class="error-msg" id="errJam">⚠️ Pilih jam kerja</div>
-            </div>
-            <div class="btn-group"><button class="btn btn-primary" onclick="validateAndGo(2)">Lanjutkan →</button></div>
+            <div class="section-head"><span class="step-circle">1</span><h2>Kategori Usia Anda</h2></div>
+            <p class="section-desc">Pilih kelompok usia yang paling sesuai. Ini akan menyesuaikan pertanyaan berikutnya.</p>
+            <div class="age-list" id="ageListContainer"></div>
+            <div class="error-msg" id="errUsia">⚠️ Pilih salah satu kategori usia</div>
+            <div class="btn-group"><button class="btn btn-primary" onclick="goToAgeQuestions()">Lanjutkan ke Pertanyaan →</button></div>
         </div>
 
         <!-- SECTION 2 -->
         <div class="card hidden" id="section2">
-            <div class="section-head"><span class="step-circle">2</span><h2>Peta Keluhan Tubuh</h2></div>
-            <p class="section-desc">
-                <strong>Sentuh</strong> area tubuh yang nyeri. Pilih level: <strong>0</strong> (tidak) – <strong>4</strong> (sangat berat). 
-                <br>⚠️ Minimal <strong>5 area</strong> dengan nilai ≥1.
-            </p>
-            <div class="selected-summary" id="selectedSummary">
-                <span class="no-selection">🔍 Belum ada area yang dipilih</span>
-            </div>
-            <div class="nordic-grid" id="nordicGrid"></div>
+            <div class="section-head"><span class="step-circle">2</span><h2>Pertanyaan Awal (<span id="ageLabelDisplay"></span>)</h2></div>
+            <p class="section-desc">Jawab pertanyaan berikut berdasarkan kondisi Anda sehari-hari.</p>
+            <div id="ageQuestionsContainer"></div>
             <div class="btn-group">
-                <button class="btn btn-secondary" onclick="goTo(1)">← Kembali</button>
-                <button class="btn btn-primary" onclick="goTo(3)">Lanjutkan →</button>
+                <button class="btn btn-secondary" onclick="goToStep(1)">← Kembali</button>
+                <button class="btn btn-primary" onclick="calculateInitialResult()">Lihat Hasil Awal →</button>
             </div>
         </div>
 
         <!-- SECTION 3 -->
         <div class="card hidden" id="section3">
-            <div class="section-head"><span class="step-circle">3</span><h2>Kebiasaan & Postur Kerja</h2></div>
-            <p class="section-desc">Pilih jawaban yang paling menggambarkan kondisi Anda sehari-hari.</p>
-            <div id="habitContainer"></div>
+            <div class="section-head" style="justify-content:center;"><span class="step-circle">3</span><h2>Hasil Skrining Awal & Analisis</h2></div>
+            <div id="initialResultContent" style="text-align:center;"></div>
             <div class="btn-group">
-                <button class="btn btn-secondary" onclick="goTo(2)">← Kembali</button>
-                <button class="btn btn-primary" onclick="validateAndGoToResult()">Lihat Diagnosa →</button>
+                <button class="btn btn-secondary" onclick="goToStep(2)">← Kembali</button>
+                <button class="btn btn-accent" onclick="goToStep(4)">Lanjut Pemeriksaan Detail →</button>
             </div>
         </div>
 
         <!-- SECTION 4 -->
         <div class="card hidden" id="section4">
-            <div class="section-head" style="justify-content:center;"><span class="step-circle">✓</span><h2>Hasil Diagnosa</h2></div>
-            <div id="resultContent" style="text-align:center;"></div>
+            <div class="section-head"><span class="step-circle">4</span><h2>Pemeriksaan Lanjutan</h2></div>
+            <p class="section-desc"><strong>1. Area Cedera Umum:</strong> Pilih tingkat nyeri (0-4) pada 5 bagian tubuh.<br><strong>2. Kebiasaan Kerja:</strong> Pilih jawaban yang paling sesuai.</p>
+            <div class="nordic-grid" id="nordicGrid"></div>
+            <div class="selected-summary" id="selectedSummary" style="margin-top:8px; font-size:0.7rem; color:#6b5b7c;"></div>
+            <div id="habitContainer"></div>
             <div class="btn-group">
-                <button class="btn btn-outline" onclick="goTo(3)">← Kembali</button>
-                <button class="btn btn-accent" onclick="resetAll()">🔄 Isi Ulang</button>
+                <button class="btn btn-secondary" onclick="goToStep(3)">← Kembali</button>
+                <button class="btn btn-primary" onclick="goToFinalSummary()">Lihat Rangkuman Akhir →</button>
+            </div>
+        </div>
+
+        <!-- SECTION 5 -->
+        <div class="card hidden" id="section5">
+            <div class="section-head" style="justify-content:center;"><span class="step-circle">5</span><h2>Rangkuman & Rekomendasi</h2></div>
+            <div id="finalSummaryContent" style="text-align:center;"></div>
+            <div class="btn-group">
+                <button class="btn btn-outline" onclick="goToStep(4)">← Kembali</button>
+                <button class="btn btn-accent" onclick="resetAll()">🔄 Mulai Ulang</button>
             </div>
         </div>
     </div>
 
     <script>
-        const bodyParts = [
-            "Leher", "Leher Belakang", "Bahu Kiri", "Bahu Kanan",
-            "Lengan Atas Kiri", "Lengan Atas Kanan", "Siku Kiri", "Siku Kanan",
-            "Lengan Bawah Kiri", "Lengan Bawah Kanan", "Pergelangan Tangan Kiri", "Pergelangan Tangan Kanan",
-            "Dada", "Perut", "Pinggang Bawah",
-            "Pinggul Kiri", "Pinggul Kanan", "Paha Kiri", "Paha Kanan",
-            "Lutut Kiri", "Lutut Kanan", "Betis Kiri", "Betis Kanan",
-            "Pergelangan Kaki Kiri", "Pergelangan Kaki Kanan", "Telapak Kaki Kiri", "Telapak Kaki Kanan"
-        ];
+        const bodyParts = ["Leher", "Bahu", "Pinggang Bawah", "Pergelangan Tangan", "Lutut"];
 
-        const areaAdvice = {
-            "Leher": "Atur monitor sejajar mata, lakukan peregangan leher tiap 30 menit.",
-            "Leher Belakang": "Hindari menunduk lama, gunakan sandaran kepala jika perlu.",
-            "Bahu Kiri": "Periksa posisi keyboard, turunkan bahu secara sadar.",
-            "Bahu Kanan": "Periksa posisi mouse, lakukan gerakan memutar bahu.",
-            "Lengan Atas Kiri": "Pastikan siku dekat tubuh, jangan menjangkau terlalu jauh.",
-            "Lengan Atas Kanan": "Atur sandaran lengan kursi agar menopang dengan baik.",
-            "Siku Kiri": "Gunakan bantalan siku jika bersandar di meja keras.",
-            "Siku Kanan": "Hindari tekanan langsung pada siku saat mengetik.",
-            "Lengan Bawah Kiri": "Posisi pergelangan tangan netral, gunakan wrist rest.",
-            "Lengan Bawah Kanan": "Sering meregangkan jari dan pergelangan tangan.",
-            "Pergelangan Tangan Kiri": "Gunakan keyboard ergonomis, hindari menekuk pergelangan.",
-            "Pergelangan Tangan Kanan": "Istirahatkan tangan dari mouse secara berkala.",
-            "Dada": "Peregangan dada di sela kerja, buka bahu lebar.",
-            "Perut": "Kencangkan otot perut saat duduk, jangan membungkuk.",
-            "Pinggang Bawah": "Gunakan bantal lumbar, berdiri dan berjalan tiap 45 menit.",
-            "Pinggul Kiri": "Kursi dengan bantalan empuk, atur ketinggian kursi.",
-            "Pinggul Kanan": "Seimbangkan beban duduk, jangan menyilangkan kaki.",
-            "Paha Kiri": "Pastikan kaki menapak lantai, gunakan footrest jika perlu.",
-            "Paha Kanan": "Atur posisi duduk agar paha sejajar lantai.",
-            "Lutut Kiri": "Lutut tidak tertekuk tajam, sudut 90° ideal.",
-            "Lutut Kanan": "Hindari duduk terlalu lama dengan lutut ditekuk.",
-            "Betis Kiri": "Lakukan peregangan betis, berdiri dan jinjit ringan.",
-            "Betis Kanan": "Gerakkan kaki secara berkala untuk sirkulasi.",
-            "Pergelangan Kaki Kiri": "Gunakan alas kaki yang nyaman, jangan menekuk kaki.",
-            "Pergelangan Kaki Kanan": "Istirahatkan kaki, angkat dan putar pergelangan.",
-            "Telapak Kaki Kiri": "Gunakan sepatu dengan bantalan baik, hindari berdiri statis.",
-            "Telapak Kaki Kanan": "Lakukan pijatan ringan pada telapak kaki."
+        const ageQuestions = {
+            'remaja': [
+                { q: 'Berapa jam penggunaan gadget per hari?', opts: ['<2 jam', '2-4 jam', '4-6 jam', '>6 jam'], w: [0, 1, 3, 5] },
+                { q: 'Posisi saat belajar/menggunakan laptop?', opts: ['Duduk di meja', 'Di kasur', 'Lesehan', 'Sering berganti'], w: [0, 2, 4, 3] },
+                { q: 'Apakah kamu sering membawa tas berat?', opts: ['Tidak pernah', 'Jarang', 'Sering', 'Setiap hari'], w: [0, 2, 4, 5] },
+                { q: 'Aktivitas olahraga dalam seminggu?', opts: ['≥3 kali', '1-2 kali', 'Kadang', 'Tidak pernah'], w: [0, 2, 4, 5] },
+                { q: 'Apakah kamu sering menunduk saat melihat layar?', opts: ['Tidak pernah', 'Kadang', 'Sering', 'Selalu'], w: [0, 2, 4, 5] },
+                { q: 'Berapa lama kamu duduk tanpa istirahat?', opts: ['<30 menit', '30-60 menit', '1-2 jam', '>2 jam'], w: [0, 1, 3, 5] }
+            ],
+            'dewasa-muda': [
+                { q: 'Durasi duduk tanpa jeda saat bekerja?', opts: ['<30 menit', '30-60 menit', '1-2 jam', '>2 jam'], w: [0, 1, 3, 5] },
+                { q: 'Posisi monitor komputer?', opts: ['Sejajar mata', 'Sedikit di bawah', 'Jauh di bawah', 'Tidak menentu'], w: [0, 1, 4, 3] },
+                { q: 'Frekuensi peregangan di sela kerja?', opts: ['Tiap 30 menit', 'Tiap 1 jam', '2-3 jam sekali', 'Jarang'], w: [0, 1, 3, 5] },
+                { q: 'Apakah Anda rutin berolahraga?', opts: ['Ya, ≥3x/minggu', '1-2x/minggu', 'Kadang-kadang', 'Tidak'], w: [0, 2, 4, 5] },
+                { q: 'Apakah Anda sering mengangkat beban berat?', opts: ['Tidak', 'Jarang', 'Kadang', 'Sering'], w: [0, 2, 3, 5] },
+                { q: 'Kualitas kursi kerja Anda?', opts: ['Ergonomis', 'Cukup nyaman', 'Kurang nyaman', 'Sangat tidak nyaman'], w: [0, 1, 3, 5] }
+            ],
+            'dewasa': [
+                { q: 'Berapa jam Anda bekerja dalam posisi duduk?', opts: ['<4 jam', '4-6 jam', '6-8 jam', '>8 jam'], w: [0, 2, 3, 5] },
+                { q: 'Apakah kursi kerja Anda memiliki sandaran lumbar?', opts: ['Ya, sangat baik', 'Cukup', 'Kurang', 'Tidak ada'], w: [0, 1, 3, 5] },
+                { q: 'Seberapa sering Anda merasa pegal di punggung bawah?', opts: ['Tidak pernah', 'Jarang', 'Sering', 'Hampir setiap hari'], w: [0, 2, 4, 6] },
+                { q: 'Kebiasaan istirahat pendek setiap 45 menit?', opts: ['Selalu', 'Sering', 'Kadang', 'Tidak pernah'], w: [0, 1, 3, 5] },
+                { q: 'Apakah Anda melakukan peregangan khusus untuk pekerja?', opts: ['Ya, rutin', 'Kadang', 'Jarang', 'Tidak pernah'], w: [0, 1, 3, 5] },
+                { q: 'Tingkat stres dalam pekerjaan?', opts: ['Rendah', 'Sedang', 'Tinggi', 'Sangat tinggi'], w: [0, 2, 4, 5] }
+            ],
+            'senior': [
+                { q: 'Apakah Anda menggunakan alat bantu jalan atau koreksi postur?', opts: ['Tidak perlu', 'Kadang', 'Sering', 'Setiap saat'], w: [0, 2, 4, 5] },
+                { q: 'Keluhan nyeri sendi saat beraktivitas?', opts: ['Tidak ada', 'Ringan', 'Sedang', 'Berat'], w: [0, 2, 4, 6] },
+                { q: 'Pencahayaan di ruang kerja/aktivitas?', opts: ['Sangat terang', 'Cukup', 'Redup', 'Sangat redup'], w: [0, 1, 3, 4] },
+                { q: 'Apakah Anda rutin melakukan peregangan ringan?', opts: ['Ya, setiap hari', 'Beberapa kali seminggu', 'Jarang', 'Tidak pernah'], w: [0, 1, 3, 5] },
+                { q: 'Apakah Anda merasa cepat lelah saat bekerja?', opts: ['Tidak', 'Kadang', 'Sering', 'Hampir selalu'], w: [0, 2, 4, 5] },
+                { q: 'Kualitas tidur Anda?', opts: ['Baik', 'Cukup', 'Kurang', 'Buruk'], w: [0, 2, 3, 5] }
+            ]
         };
 
         const habitQuestions = [
@@ -607,269 +589,312 @@
             { id: 'durasi', emoji: '⏳', q: 'Durasi duduk tanpa jeda?', opts: ['< 30 menit', '30-60 menit', '1-2 jam', '> 2 jam'], w: [0, 1, 3, 5] },
             { id: 'monitor', emoji: '🖥️', q: 'Posisi layar monitor?', opts: ['Sejajar mata', 'Sedikit di bawah', 'Jauh di bawah', 'Tanpa monitor'], w: [0, 1, 4, 2] },
             { id: 'istirahat', emoji: '☕', q: 'Frekuensi peregangan?', opts: ['Setiap 30 menit', 'Setiap 1 jam', '2-3 jam sekali', 'Jarang/tidak pernah'], w: [0, 1, 3, 5] },
-            { id: 'olahraga', emoji: '🏃', q: 'Olahraga per minggu?', opts: ['≥3 kali', '1-2 kali', 'Kadang-kadang', 'Tidak pernah'], w: [0, 2, 4, 5] },
-            { id: 'keluhan', emoji: '😣', q: 'Keluhan fisik saat/setelah kerja?', opts: ['Tidak pernah', 'Jarang', 'Sering', 'Hampir setiap hari'], w: [0, 2, 4, 6] },
-            { id: 'pencahayaan', emoji: '💡', q: 'Pencahayaan di ruang kerja?', opts: ['Sangat terang dan nyaman', 'Cukup terang', 'Agak redup', 'Sangat redup/tidak ada'], w: [0, 1, 3, 4] }
+            { id: 'olahraga', emoji: '🏃', q: 'Olahraga per minggu?', opts: ['≥3 kali', '1-2 kali', 'Kadang-kadang', 'Tidak pernah'], w: [0, 2, 4, 5] }
         ];
 
         let currentStep = 1;
+        let selectedAgeGroup = null;
+        let ageAnswers = {};
         let bodyData = Object.fromEntries(bodyParts.map(p => [p, 0]));
         let habitData = {};
-        let selectedPart = bodyParts[0];
 
-        const headerIcons = {
-            1: '🧑‍💼',
-            2: '💆',
-            3: '🧘‍♀️',
-            4: '📊'
-        };
+        const headerIcons = { 1: '🧑‍💼', 2: '💬', 3: '📊', 4: '🔍', 5: '🏁' };
+
+        function renderAgeList() {
+            const container = document.getElementById('ageListContainer');
+            const ages = [
+                { group: 'remaja', emoji: '🧒', label: 'Remaja', range: '15 – 25 tahun', desc: 'Pelajar / Awal Karir' },
+                { group: 'dewasa-muda', emoji: '👨‍💼', label: 'Dewasa Muda', range: '26 – 35 tahun', desc: 'Produktif Aktif' },
+                { group: 'dewasa', emoji: '👨‍💻', label: 'Dewasa', range: '36 – 50 tahun', desc: 'Profesional Berpengalaman' },
+                { group: 'senior', emoji: '👴', label: 'Senior', range: '51 – 80 tahun', desc: 'Bijak & Berpengalaman' }
+            ];
+            container.innerHTML = ages.map(a => `
+            <div class="age-card" data-age-group="${a.group}" onclick="selectAgeCard(this)">
+                <span class="age-emoji">${a.emoji}</span>
+                <div class="age-info"><div class="age-label">${a.label}</div><div class="age-range">${a.range}</div><div style="font-size:0.65rem; color:#8a7a9e;">${a.desc}</div></div>
+                <span class="age-check">✓</span>
+            </div>`).join('');
+        }
+
+        function selectAgeCard(card) {
+            document.querySelectorAll('.age-card').forEach(c => c.classList.remove('selected-age'));
+            card.classList.add('selected-age');
+            selectedAgeGroup = card.dataset.ageGroup;
+            ageAnswers = {};
+            document.getElementById('errUsia').classList.remove('show');
+        }
 
         function updateProgress() {
-            const percent = ((currentStep - 1) / 3) * 100;
+            const percent = ((currentStep - 1) / 4) * 100;
             document.getElementById('progressFill').style.width = percent + '%';
             document.getElementById('progressPercent').textContent = Math.round(percent) + '%';
-            const labels = ['', 'Langkah 1 • Data Diri', 'Langkah 2 • Peta Keluhan', 'Langkah 3 • Kebiasaan', 'Langkah 4 • Hasil Diagnosa'];
+            const labels = ['', 'Langkah 1 • Kategori Usia', 'Langkah 2 • Pertanyaan Awal', 'Langkah 3 • Hasil Awal', 'Langkah 4 • Pemeriksaan Lanjutan', 'Langkah 5 • Rangkuman'];
             document.getElementById('progressText').textContent = labels[currentStep];
         }
 
-        function updateHeaderIcon() {
-            document.getElementById('headerIcon').textContent = headerIcons[currentStep] || '🧘';
-        }
+        function updateHeaderIcon() { document.getElementById('headerIcon').textContent = headerIcons[currentStep] || '🧘'; }
 
-        function showStep(n) {
-            ['section1', 'section2', 'section3', 'section4'].forEach(id => document.getElementById(id).classList.add('hidden'));
-            document.getElementById('section' + n).classList.remove('hidden');
-            currentStep = n;
+        function goToStep(step) {
+            if (step === 2 && !selectedAgeGroup) { document.getElementById('errUsia').classList.add('show'); return; }
+            if (step === 5 && currentStep === 4) {
+                if (Object.values(bodyData).filter(v => v > 0).length < 2) { alert('Minimal pilih 2 area dengan tingkat nyeri ≥1.'); return; }
+                if (habitQuestions.some(q => habitData[q.id] === undefined)) { alert('Harap jawab semua pertanyaan kebiasaan kerja.'); return; }
+            }
+            ['section1', 'section2', 'section3', 'section4', 'section5'].forEach(id => document.getElementById(id).classList.add('hidden'));
+            document.getElementById('section' + step).classList.remove('hidden');
+            currentStep = step;
             updateProgress();
             updateHeaderIcon();
-            if (n === 2) renderNordic();
-            if (n === 3) renderHabits();
-            if (n === 4) generateResult();
+            if (step === 2) renderAgeQuestions();
+            if (step === 3) renderInitialResult();
+            if (step === 4) { renderNordic();
+                renderHabits(); }
+            if (step === 5) renderFinalSummary();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function goTo(n) {
-            if (n === 2 && currentStep === 1) return;
-            if (n === 3 && currentStep === 2) {
-                const count = Object.values(bodyData).filter(v => v > 0).length;
-                if (count < 5) {
-                    alert('Minimal pilih 5 area tubuh dengan tingkat nyeri ≥1.');
-                    return;
+        function goToAgeQuestions() { if (!selectedAgeGroup) { document.getElementById('errUsia').classList.add('show'); } else goToStep(2); }
+
+        function renderAgeQuestions() {
+            const questions = ageQuestions[selectedAgeGroup] || [];
+            document.getElementById('ageLabelDisplay').textContent = { remaja: 'Remaja', 'dewasa-muda': 'Dewasa Muda', dewasa: 'Dewasa', senior: 'Senior' } [
+                selectedAgeGroup
+            ];
+            document.getElementById('ageQuestionsContainer').innerHTML = questions.map((q, idx) => {
+                const sel = ageAnswers[idx];
+                return `<div style="margin-bottom:16px;"><p style="font-weight:600; font-size:0.8rem; margin-bottom:5px;">${q.q}</p><div class="option-grid">${q.opts.map((opt, optIdx) => `<div class="option-item${sel === optIdx ? ' selected-option' : ''}" onclick="selectAgeAnswer(${idx}, ${optIdx})">${opt}</div>`).join('')}</div></div>`;
+            }).join('');
+        }
+
+        function selectAgeAnswer(qIdx, optIdx) { ageAnswers[qIdx] = optIdx;
+            renderAgeQuestions(); }
+
+        function calculateInitialResult() {
+            if (ageQuestions[selectedAgeGroup].some((_, i) => ageAnswers[i] === undefined)) { alert('Harap jawab semua pertanyaan.'); return; }
+            goToStep(3);
+        }
+
+        function getScoreCategory(percent) {
+            if (percent <= 25) return { cat: 'Risiko Rendah', badge: 'badge-low' };
+            if (percent <= 50) return { cat: 'Risiko Sedang', badge: 'badge-med' };
+            if (percent <= 75) return { cat: 'Risiko Tinggi', badge: 'badge-high' };
+            return { cat: 'Risiko Sangat Tinggi', badge: 'badge-severe' };
+        }
+
+        function renderInitialResult() {
+            const questions = ageQuestions[selectedAgeGroup];
+            let total = 0,
+                max = 0;
+            questions.forEach((q, i) => {
+                const answerIndex = ageAnswers[i] || 0;
+                total += q.w[answerIndex];
+                max += Math.max(...q.w);
+            });
+            const percent = Math.round((total / max) * 100);
+            const { cat, badge } = getScoreCategory(percent);
+
+            const domainData = (() => {
+                const ans = ageAnswers;
+                const safe = (idx) => (ans[idx] !== undefined ? ans[idx] : 0);
+                switch (selectedAgeGroup) {
+                    case 'remaja':
+                        return [
+                            { name: 'Postur & Ergonomi', pct: Math.min(100, Math.round(((safe(1) + safe(4) + safe(5)) / 15) * 100)) },
+                            { name: 'Aktivitas & Cedera', pct: Math.min(100, Math.round(((safe(2) + safe(3)) / 10) * 100)) },
+                            { name: 'Nyeri Muskuloskeletal', pct: Math.min(100, Math.round(((safe(0) + safe(4)) / 10) * 100)) },
+                            { name: 'Stres & Pemulihan', pct: Math.min(100, Math.round((safe(0) / 5) * 100)) }
+                        ];
+                    case 'dewasa-muda':
+                        return [
+                            { name: 'Postur & Ergonomi', pct: Math.min(100, Math.round(((safe(1) + safe(5)) / 8) * 100)) },
+                            { name: 'Aktivitas & Cedera', pct: Math.min(100, Math.round(((safe(3) + safe(4)) / 10) * 100)) },
+                            { name: 'Nyeri Muskuloskeletal', pct: Math.min(100, Math.round(((safe(0) + safe(2)) / 10) * 100)) },
+                            { name: 'Stres & Pemulihan', pct: Math.min(100, Math.round((safe(2) / 5) * 100)) }
+                        ];
+                    case 'dewasa':
+                        return [
+                            { name: 'Postur & Ergonomi', pct: Math.min(100, Math.round(((safe(0) + safe(1) + safe(3)) / 15) * 100)) },
+                            { name: 'Aktivitas & Cedera', pct: Math.min(100, Math.round(((safe(4) + safe(2)) / 11) * 100)) },
+                            { name: 'Nyeri Muskuloskeletal', pct: Math.min(100, Math.round((safe(2) / 6) * 100)) },
+                            { name: 'Stres & Pemulihan', pct: Math.min(100, Math.round((safe(5) / 5) * 100)) }
+                        ];
+                    case 'senior':
+                        return [
+                            { name: 'Postur & Ergonomi', pct: Math.min(100, Math.round(((safe(2) + safe(3)) / 9) * 100)) },
+                            { name: 'Aktivitas & Cedera', pct: Math.min(100, Math.round(((safe(0) + safe(1)) / 11) * 100)) },
+                            { name: 'Nyeri Muskuloskeletal', pct: Math.min(100, Math.round((safe(1) / 6) * 100)) },
+                            { name: 'Stres & Pemulihan', pct: Math.min(100, Math.round(((safe(4) + safe(5)) / 10) * 100)) }
+                        ];
+                    default:
+                        return [];
                 }
-            }
-            showStep(n);
-        }
+            })();
 
-        function validateAndGo(n) {
-            document.querySelectorAll('.input-box input, .input-box select').forEach(el => el.classList.remove('input-error'));
-            document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
+            const analysisLong = {
+                'remaja': 'Sebagai remaja, risiko utama berasal dari postur belajar yang buruk dan penggunaan gadget berlebihan. Perbaiki posisi duduk, batasi waktu menatap layar, dan lakukan peregangan ringan setiap 30 menit.',
+                'dewasa-muda': 'Di usia produktif, durasi duduk dan pengaturan workstation yang kurang ergonomis menjadi faktor utama. Prioritaskan peregangan, kursi dengan sandaran lumbar, dan olahraga teratur.',
+                'dewasa': 'Pada usia dewasa, akumulasi kelelahan dan stres kerja memperburuk risiko muskuloskeletal. Evaluasi mendalam terhadap postur, beban kerja, dan manajemen stres sangat disarankan.',
+                'senior': 'Untuk senior, faktor seperti pencahayaan, kekuatan otot, dan pemulihan menjadi krusial. Modifikasi lingkungan kerja, latihan keseimbangan, dan istirahat teratur sangat penting.'
+            } [selectedAgeGroup] || '';
 
-            const nama = document.getElementById('nama').value.trim();
-            const usiaVal = document.getElementById('usia').value.trim();
-            const pekerjaan = document.getElementById('pekerjaan').value.trim();
-            const jam = document.getElementById('jamKerja').value;
-            let valid = true;
+            const recommendations = {
+                'remaja': ['Kurangi penggunaan gadget maksimal 2 jam non-stop', 'Gunakan meja belajar yang ergonomis', 'Lakukan peregangan leher dan bahu setiap 30 menit', 'Olahraga minimal 3 kali seminggu'],
+                'dewasa-muda': ['Atur monitor sejajar mata', 'Gunakan kursi dengan sandaran lumbar', 'Lakukan peregangan setiap 1 jam', 'Olahraga rutin minimal 2 kali seminggu'],
+                'dewasa': ['Evaluasi workstation secara menyeluruh', 'Terapkan jadwal istirahat pendek setiap 45 menit', 'Kelola stres dengan teknik relaksasi', 'Pertimbangkan fisioterapi preventif'],
+                'senior': ['Pastikan pencahayaan ruangan cukup terang', 'Lakukan latihan keseimbangan setiap pagi', 'Gunakan alat bantu jika diperlukan', 'Istirahat cukup dan jaga kualitas tidur']
+            } [selectedAgeGroup] || [];
 
-            if (!nama) {
-                document.getElementById('nama').classList.add('input-error');
-                document.getElementById('errNama').classList.add('show');
-                valid = false;
-            }
-            if (!usiaVal || isNaN(usiaVal) || usiaVal < 15 || usiaVal > 80) {
-                document.getElementById('usia').classList.add('input-error');
-                document.getElementById('errUsia').classList.add('show');
-                valid = false;
-            }
-            if (!pekerjaan) {
-                document.getElementById('pekerjaan').classList.add('input-error');
-                document.getElementById('errPekerjaan').classList.add('show');
-                valid = false;
-            }
-            if (!jam) {
-                document.getElementById('jamKerja').classList.add('input-error');
-                document.getElementById('errJam').classList.add('show');
-                valid = false;
-            }
+            const exerciseTable = [
+                { area: 'Leher', name: 'Chin Tuck', reps: '10x', freq: '3x/hari', note: 'Tarik dagu lurus ke belakang, tahan 3 detik' },
+                { area: 'Bahu', name: 'Shoulder Rolls', reps: '10x', freq: 'Setiap jam', note: 'Putar bahu ke depan & belakang perlahan' },
+                { area: 'Punggung', name: 'Cat-Cow Stretch', reps: '8x', freq: 'Pagi & malam', note: 'Posisi merangkak, lengkungkan & busungkan punggung' },
+                { area: 'Pergelangan', name: 'Wrist Stretch', reps: 'Tahan 20 detik', freq: '4x/hari', note: 'Luruskan lengan, tarik jari ke belakang' }
+            ];
 
-            if (valid) {
-                showStep(2);
-            } else {
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        }
+            let domainBarsHtml = domainData.map(d => {
+                let barClass = 'domain-low';
+                if (d.pct > 55) barClass = 'domain-high';
+                else if (d.pct > 25) barClass = 'domain-mid';
+                return `
+                <div class="domain-item">
+                    <div class="domain-label"><span>${d.name}</span><span>${d.pct}%</span></div>
+                    <div class="domain-bar-bg"><div class="domain-bar-fill ${barClass}" style="width:${d.pct}%;"></div></div>
+                </div>`;
+            }).join('');
 
-        function validateAndGoToResult() {
-            const unanswered = habitQuestions.find(q => habitData[q.id] === undefined);
-            if (unanswered) {
-                document.querySelectorAll('.habit-question').forEach(el => el.classList.remove('highlight-error'));
-                const element = document.getElementById(`habit-${unanswered.id}`);
-                if (element) {
-                    element.classList.add('highlight-error');
-                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                    setTimeout(() => {
-                        element.classList.remove('highlight-error');
-                    }, 2500);
-                }
-                return;
-            }
-            showStep(4);
-        }
-
-        function updateSummary() {
-            const selected = Object.entries(bodyData).filter(([, v]) => v > 0);
-            const summaryDiv = document.getElementById('selectedSummary');
-            if (selected.length === 0) {
-                summaryDiv.innerHTML = '<span class="no-selection">🔍 Belum ada area yang dipilih</span>';
-            } else {
-                summaryDiv.innerHTML = selected.map(([part, level]) =>
-                    `<span class="summary-badge">${part} <strong style="margin-left:2px;">(${level})</strong></span>`
-                ).join('');
-            }
+            document.getElementById('initialResultContent').innerHTML = `
+            <div class="score-circle">${percent}</div><p>dari skala 100</p><span class="badge ${badge}">${cat}</span>
+            <div class="analysis-block"><h4>📌 Kesimpulan Deskriptif</h4><p>Skor Anda <strong>${percent}%</strong> termasuk dalam kategori <strong>${cat}</strong> untuk kelompok usia ${selectedAgeGroup}. ${analysisLong}</p></div>
+            <div class="analysis-block"><h4>📊 Analisis per Domain</h4>${domainBarsHtml}</div>
+            <div class="analysis-block"><h4>💡 Rekomendasi Awal</h4><ul style="padding-left:18px;font-size:0.75rem;">${recommendations.map(r => `<li style="margin-bottom:4px;">${r}</li>`).join('')}</ul></div>
+            <div class="analysis-block"><h4>🏋️ Latihan Dasar di Rumah</h4>
+            <div class="table-responsive"><table><tr><th>Area</th><th>Latihan</th><th>Repetisi</th><th>Frekuensi</th><th>Catatan</th></tr>
+            ${exerciseTable.map(e => `<tr><td>${e.area}</td><td>${e.name}</td><td>${e.reps}</td><td>${e.freq}</td><td>${e.note}</td></tr>`).join('')}</table></div></div>
+            <a class="btn btn-map" href="https://www.google.com/maps/search/fisioterapis+terdekat" target="_blank" rel="noopener noreferrer">📍 Temukan Fisioterapis Terdekat</a>
+            <p style="font-size:0.65rem; margin-top:8px;">* Klik untuk membuka Google Maps</p>
+        `;
         }
 
         function renderNordic() {
-            const grid = document.getElementById('nordicGrid');
-            grid.innerHTML = bodyParts.map(part => {
+            document.getElementById('nordicGrid').innerHTML = bodyParts.map(part => {
                 const level = bodyData[part];
-                let dotsHtml = '';
-                for (let i = 0; i <= 4; i++) {
-                    let cls = 'pain-dot';
-                    if (i === 1) cls += ' l1';
-                    if (i === 2) cls += ' l2';
-                    if (i === 3) cls += ' l3';
-                    if (i === 4) cls += ' l4';
-                    if (level === i) cls += ' active-dot';
-                    dotsHtml += `<span class="${cls}" onclick="event.stopPropagation(); setPain('${part}', ${i})">${i}</span>`;
-                }
-                const activeClass = (level > 0) ? ' active-nordic' : '';
-                return `
-                    <div class="nordic-item${activeClass}" onclick="selectPart('${part}')">
-                        <span style="flex:1;">${part}</span>
-                        <div class="pain-selector">${dotsHtml}</div>
-                    </div>
-                `;
+                let dots = '';
+                for (let i = 0; i <= 4; i++) dots +=
+                    `<span class="pain-dot${level === i ? ' active-dot' : ''}" onclick="event.stopPropagation(); setPain('${part}', ${i})">${i}</span>`;
+                return `<div class="nordic-item${level>0?' active-nordic':''}"><span style="flex:1;">${part}</span><div class="pain-selector">${dots}</div></div>`;
             }).join('');
             updateSummary();
         }
 
-        function selectPart(part) {
-            selectedPart = part;
-            renderNordic();
-        }
+        function setPain(part, level) { bodyData[part] = level;
+            renderNordic(); }
 
-        function setPain(part, level) {
-            bodyData[part] = level;
-            selectedPart = part;
-            renderNordic();
+        function updateSummary() {
+            const sel = Object.entries(bodyData).filter(([, v]) => v > 0);
+            document.getElementById('selectedSummary').innerHTML = sel.length ? sel.map(([p, l]) =>
+                `<span class="summary-badge">${p} (${l})</span>`).join(' ') : '🔍 Belum ada area dipilih';
         }
 
         function renderHabits() {
-            const container = document.getElementById('habitContainer');
-            container.innerHTML = habitQuestions.map(q => {
-                const selected = habitData[q.id];
-                return `
-                    <div class="habit-question" id="habit-${q.id}">
-                        <p style="font-weight:600; margin-bottom:5px; font-size:0.8rem;">${q.emoji} ${q.q}</p>
-                        <div class="habit-grid">
-                            ${q.opts.map((opt, idx) => `
-                                <div class="habit-option${selected === idx ? ' selected-habit' : ''}" onclick="selectHabit('${q.id}', ${idx})">
-                                    ${opt}
-                                </div>
-                            `).join('')}
-                        </div>
-                    </div>
-                `;
+            document.getElementById('habitContainer').innerHTML = '<h4 style="margin-bottom:8px;">Kebiasaan Kerja</h4>' + habitQuestions.map(q => {
+                const sel = habitData[q.id];
+                return `<div style="margin-bottom:14px;"><p style="font-weight:600; font-size:0.8rem;">${q.emoji} ${q.q}</p><div class="option-grid">${q.opts.map((opt, idx) => `<div class="option-item${sel===idx?' selected-option':''}" onclick="selectHabit('${q.id}', ${idx})">${opt}</div>`).join('')}</div></div>`;
             }).join('');
         }
 
-        function selectHabit(id, idx) {
-            habitData[id] = idx;
-            renderHabits();
+        function selectHabit(id, idx) { habitData[id] = idx;
+            renderHabits(); }
+
+        function goToFinalSummary() {
+            if (Object.values(bodyData).filter(v => v > 0).length < 2) { alert('Minimal pilih 2 area dengan tingkat nyeri ≥1.'); return; }
+            if (habitQuestions.some(q => habitData[q.id] === undefined)) { alert('Harap jawab semua pertanyaan kebiasaan kerja.'); return; }
+            goToStep(5);
         }
 
-        function generateResult() {
+        function renderFinalSummary() {
+            if (!selectedAgeGroup) { document.getElementById('finalSummaryContent').innerHTML = '<p>Error. Silakan ulangi.</p>'; return; }
+            const aq = ageQuestions[selectedAgeGroup];
+            let initScore = 0,
+                initMax = 0;
+            aq.forEach((q, i) => { initScore += q.w[ageAnswers[i] || 0];
+                initMax += Math.max(...q.w); });
+            const initPct = Math.round((initScore / initMax) * 100);
             const nordicScore = Object.values(bodyData).reduce((a, b) => a + b, 0);
-            const maxNordic = bodyParts.length * 4;
-            const nordicPercent = Math.round((nordicScore / maxNordic) * 100);
+            const nordicPct = Math.round((nordicScore / (bodyParts.length * 4)) * 100);
+            let habitScore = 0,
+                habitMax = 0;
+            habitQuestions.forEach(q => { habitScore += q.w[habitData[q.id] || 0];
+                habitMax += Math.max(...q.w); });
+            const habitPct = Math.round((habitScore / habitMax) * 100);
+            const combined = Math.round(initPct * 0.3 + nordicPct * 0.4 + habitPct * 0.3);
+            const { cat, badge } = getScoreCategory(combined);
 
-            let habitScore = 0, maxHabit = 0;
-            habitQuestions.forEach(q => {
-                if (habitData[q.id] !== undefined) {
-                    habitScore += q.w[habitData[q.id]];
-                    maxHabit += Math.max(...q.w);
+            const topAreas = Object.entries(bodyData).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).slice(0, 3);
+            const topHtml = topAreas.length ? topAreas.map(([p, l]) => `<span class="summary-badge">${p} (${l})</span>`).join(' ') :
+                'Tidak ada';
+
+            let areaRows = '';
+            bodyParts.forEach(part => {
+                const level = bodyData[part];
+                if (level > 0) {
+                    const areaPct = Math.round((level / 4) * 100);
+                    let interpretation = areaPct <= 30 ? 'Ringan' : areaPct <= 60 ? 'Sedang' : 'Berat';
+                    areaRows +=
+                        `<tr><td>${part}</td><td>${level}</td><td>${areaPct}%</td><td>${interpretation}</td></tr>`;
                 }
             });
-            const habitPercent = Math.round((habitScore / maxHabit) * 100);
-            const combined = Math.round(nordicPercent * 0.6 + habitPercent * 0.4);
+            if (!areaRows) areaRows = '<tr><td colspan="4">Tidak ada area dengan nyeri</td></tr>';
 
-            let category, badgeClass;
-            if (combined <= 20) { category = 'Risiko Rendah'; badgeClass = 'badge-low'; }
-            else if (combined <= 40) { category = 'Risiko Sedang'; badgeClass = 'badge-med'; }
-            else if (combined <= 60) { category = 'Risiko Tinggi'; badgeClass = 'badge-high'; }
-            else { category = 'Risiko Sangat Tinggi'; badgeClass = 'badge-severe'; }
+            const exerciseTable = {
+                'Leher': { name: 'Chin Tuck', reps: '10x', freq: '3x/hari', note: 'Tarik dagu lurus ke belakang' },
+                'Bahu': { name: 'Shoulder Rolls', reps: '10x bolak-balik', freq: 'Setiap jam', note: 'Putar bahu ke depan & belakang' },
+                'Pinggang Bawah': { name: 'Pelvic Tilt', reps: '15x', freq: 'Pagi & malam', note: 'Sambil berbaring, kencangkan perut' },
+                'Pergelangan Tangan': { name: 'Wrist Flexor Stretch', reps: 'Tahan 30 detik', freq: '4x/hari',
+                    note: 'Luruskan lengan, tarik jari ke belakang' },
+                'Lutut': { name: 'Quadriceps Set', reps: '12x tiap kaki', freq: '2x/hari', note: 'Duduk, luruskan kaki, tahan 5 detik' }
+            };
 
-            const sorted = Object.entries(bodyData)
-                .filter(([, v]) => v > 0)
-                .sort((a, b) => b[1] - a[1])
-                .slice(0, 3);
+            let exerciseRows = '';
+            topAreas.forEach(([part]) => {
+                const ex = exerciseTable[part];
+                if (ex) exerciseRows +=
+                    `<tr><td>${part}</td><td>${ex.name}</td><td>${ex.reps}</td><td>${ex.freq}</td><td>${ex.note}</td></tr>`;
+            });
+            if (!exerciseRows) exerciseRows = '<tr><td colspan="5">Tidak ada area spesifik</td></tr>';
 
-            const topAreasHtml = sorted.length ? sorted.map(([part, level]) => {
-                const advice = areaAdvice[part] || 'Lakukan evaluasi ergonomi lebih lanjut.';
-                return `<div style="margin:6px 0;"><span class="area-badge">🔴 ${part} (level ${level})</span><br><small style="color:#5f6c7a;">${advice}</small></div>`;
-            }).join('') : '<p>Tidak ada area dengan keluhan signifikan.</p>';
-
-            const nama = document.getElementById('nama').value.trim() || 'Responden';
-            const now = new Date().toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
-
-            const resultHTML = `
-                <p style="color:#5f6c7a;">Halo, <strong>${nama}</strong></p>
-                <div class="score-circle">${combined}</div>
-                <p>dari skala 100</p>
-                <span class="badge ${badgeClass}">${category}</span>
-                <div style="display:flex; justify-content:center; gap:16px; margin:14px 0; flex-wrap:wrap;">
-                    <div><strong>${nordicScore}</strong><br><small>Skor Nordic</small></div>
-                    <div><strong>${habitScore}</strong><br><small>Skor Kebiasaan</small></div>
-                </div>
-                <div style="text-align:left; margin-top:10px;">
-                    <h4 style="margin-bottom:4px;">🔍 Area Paling Bermasalah</h4>
-                    ${topAreasHtml}
-                </div>
-                <div class="reco-list" style="margin-top:10px;">
-                    <h4 style="margin-bottom:4px;">📋 Rekomendasi</h4>
-                    ${combined <= 20 ? '<li>✅ Pertahankan postur baik dan kebiasaan sehat.</li>' : ''}
-                    ${combined > 20 && combined <= 40 ? '<li>⚠️ Atur workstation lebih ergonomis, lakukan peregangan rutin.</li>' : ''}
-                    ${combined > 40 && combined <= 60 ? '<li>🔴 Evaluasi serius postur dan peralatan kerja, konsultasi jika perlu.</li>' : ''}
-                    ${combined > 60 ? '<li>🚨 Segera temui profesional medis dan redesign tempat kerja.</li>' : ''}
-                    <li>🪑 Gunakan kursi dengan sandaran lumbar yang baik.</li>
-                    <li>⏱️ Istirahat pendek setiap 30-45 menit untuk berdiri dan meregang.</li>
-                </div>
-                <p style="font-size:0.65rem; color:#8a8a8a; margin-top:12px;">* Hasil skrining awal, bukan diagnosis medis.</p>
-                <p style="font-size:0.65rem; color:#8a8a8a;">📅 ${now}</p>
-            `;
-            document.getElementById('resultContent').innerHTML = resultHTML;
+            document.getElementById('finalSummaryContent').innerHTML = `
+            <p style="font-weight:600;">Kategori Usia: <span style="color:#7c3aed;">${selectedAgeGroup}</span></p>
+            <div style="display:flex; justify-content:center; gap:20px; margin:16px 0; flex-wrap:wrap;">
+                <div><strong>${initPct}</strong><br><small>Skrining</small></div>
+                <div><strong>${nordicPct}</strong><br><small>Area</small></div>
+                <div><strong>${habitPct}</strong><br><small>Kebiasaan</small></div>
+            </div>
+            <div class="score-circle">${combined}</div><p>Skor Gabungan</p><span class="badge ${badge}">${cat}</span>
+            <div class="analysis-block"><h4>📋 Kesimpulan Akhir</h4><p>Berdasarkan skrining usia, peta nyeri, dan kebiasaan, Anda masuk kategori <strong>${cat}</strong>. Area paling bermasalah: ${topHtml || 'tidak ada'}. Kombinasi latihan dan penyesuaian ergonomi sangat dianjurkan.</p></div>
+            <div class="analysis-block"><h4>📊 Analisis Area Nyeri (Persentase)</h4>
+            <div class="table-responsive"><table><tr><th>Area</th><th>Skor</th><th>Persentase</th><th>Interpretasi</th></tr>${areaRows}</table></div></div>
+            <div class="analysis-block"><h4>🏋️ Tabel Latihan Fisioterapi di Rumah</h4>
+            <div class="table-responsive"><table><tr><th>Area</th><th>Latihan</th><th>Repetisi</th><th>Frekuensi</th><th>Catatan</th></tr>${exerciseRows}</table></div></div>
+            <a class="btn btn-map" href="https://www.google.com/maps/search/fisioterapis+terdekat" target="_blank" rel="noopener noreferrer">📍 Temukan Fisioterapis Terdekat</a>
+            <p style="font-size:0.65rem; margin-top:8px;">* Klik untuk membuka Google Maps</p>
+        `;
         }
 
         function resetAll() {
+            selectedAgeGroup = null;
+            ageAnswers = {};
             bodyParts.forEach(p => bodyData[p] = 0);
             habitData = {};
-            selectedPart = bodyParts[0];
-            document.getElementById('nama').value = '';
-            document.getElementById('usia').value = '';
-            document.getElementById('pekerjaan').value = '';
-            document.getElementById('jamKerja').value = '';
-            document.querySelectorAll('.input-error').forEach(el => el.classList.remove('input-error'));
-            document.querySelectorAll('.error-msg').forEach(el => el.classList.remove('show'));
-            showStep(1);
-            renderNordic();
-            renderHabits();
+            document.querySelectorAll('.age-card').forEach(c => c.classList.remove('selected-age'));
+            goToStep(1);
         }
 
-        // Init
+        renderAgeList();
         renderNordic();
         renderHabits();
         updateProgress();
         updateHeaderIcon();
-        showStep(1);
+        goToStep(1);
     </script>
 </body>
 </html>
