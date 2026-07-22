@@ -111,14 +111,8 @@
             display: none !important;
         }
         @keyframes fadeUp {
-            from {
-                opacity: 0;
-                transform: translateY(8px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
         }
         .section-head {
             display: flex;
@@ -169,10 +163,7 @@
             touch-action: manipulation;
             user-select: none;
         }
-        .age-card:active {
-            background: #f3e8ff;
-            transform: scale(0.98);
-        }
+        .age-card:active { background: #f3e8ff; transform: scale(0.98); }
         .age-card.selected-age {
             border-color: #7c3aed;
             background: #ede9fe;
@@ -190,20 +181,9 @@
             box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
             flex-shrink: 0;
         }
-        .age-info {
-            flex: 1;
-        }
-        .age-label {
-            font-weight: 700;
-            font-size: 0.9rem;
-            color: #2d1b4e;
-        }
-        .age-range {
-            font-size: 0.7rem;
-            color: #7c3aed;
-            font-weight: 600;
-            margin-top: 2px;
-        }
+        .age-info { flex: 1; }
+        .age-label { font-weight: 700; font-size: 0.9rem; color: #2d1b4e; }
+        .age-range { font-size: 0.7rem; color: #7c3aed; font-weight: 600; margin-top: 2px; }
         .age-check {
             width: 24px;
             height: 24px;
@@ -231,9 +211,7 @@
             align-items: center;
             gap: 4px;
         }
-        .error-msg.show {
-            display: flex;
-        }
+        .error-msg.show { display: flex; }
         .option-grid {
             display: flex;
             flex-direction: column;
@@ -285,30 +263,11 @@
             text-decoration: none;
             justify-content: center;
         }
-        .btn-primary {
-            background: #7c3aed;
-            color: #fff;
-            box-shadow: 0 6px 18px rgba(124, 58, 237, 0.25);
-        }
-        .btn-primary:active {
-            background: #6d28d9;
-            transform: scale(0.97);
-        }
-        .btn-secondary {
-            background: #fff;
-            color: #7c3aed;
-            border: 2px solid #ddd0f0;
-        }
-        .btn-accent {
-            background: #a855f7;
-            color: #fff;
-            box-shadow: 0 6px 18px rgba(168, 85, 247, 0.25);
-        }
-        .btn-outline {
-            background: transparent;
-            border: 2px solid #d5c8e8;
-            color: #5b3d8a;
-        }
+        .btn-primary { background: #7c3aed; color: #fff; box-shadow: 0 6px 18px rgba(124, 58, 237, 0.25); }
+        .btn-primary:active { background: #6d28d9; transform: scale(0.97); }
+        .btn-secondary { background: #fff; color: #7c3aed; border: 2px solid #ddd0f0; }
+        .btn-accent { background: #a855f7; color: #fff; box-shadow: 0 6px 18px rgba(168, 85, 247, 0.25); }
+        .btn-outline { background: transparent; border: 2px solid #d5c8e8; color: #5b3d8a; }
         .btn-map {
             background: #2d1b4e;
             color: #fff;
@@ -332,22 +291,10 @@
             font-weight: 700;
             font-size: 0.78rem;
         }
-        .badge-low {
-            background: #dcefe0;
-            color: #1e4a2c;
-        }
-        .badge-med {
-            background: #fdf0d5;
-            color: #6b4f1c;
-        }
-        .badge-high {
-            background: #fde0d8;
-            color: #7a3020;
-        }
-        .badge-severe {
-            background: #f5cec6;
-            color: #521f14;
-        }
+        .badge-low { background: #dcefe0; color: #1e4a2c; }
+        .badge-med { background: #fdf0d5; color: #6b4f1c; }
+        .badge-high { background: #fde0d8; color: #7a3020; }
+        .badge-severe { background: #f5cec6; color: #521f14; }
         .nordic-grid {
             display: flex;
             flex-direction: column;
@@ -372,10 +319,7 @@
             border-color: #a855f7;
             box-shadow: 0 0 0 4px rgba(168, 85, 247, 0.1);
         }
-        .pain-selector {
-            display: flex;
-            gap: 8px;
-        }
+        .pain-selector { display: flex; gap: 8px; }
         .pain-dot {
             width: 32px;
             height: 32px;
@@ -430,39 +374,13 @@
             align-items: center;
             gap: 6px;
         }
-        .domain-bar-bg {
-            height: 8px;
-            background: #e9ecef;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 4px;
-        }
-        .domain-bar-fill {
-            height: 100%;
-            border-radius: 10px;
-            transition: width 0.8s ease;
-        }
-        .domain-low {
-            background: #27ae60;
-        }
-        .domain-mid {
-            background: #f39c12;
-        }
-        .domain-high {
-            background: #e74c3c;
-        }
-        .domain-item {
-            margin-bottom: 12px;
-        }
-        .domain-label {
-            display: flex;
-            justify-content: space-between;
-            font-size: 0.75rem;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        /* ========== TABEL RESPONSIF ========== */
+        .domain-bar-bg { height: 8px; background: #e9ecef; border-radius: 10px; overflow: hidden; margin-top: 4px; }
+        .domain-bar-fill { height: 100%; border-radius: 10px; transition: width 0.8s ease; }
+        .domain-low { background: #27ae60; }
+        .domain-mid { background: #f39c12; }
+        .domain-high { background: #e74c3c; }
+        .domain-item { margin-bottom: 12px; }
+        .domain-label { display: flex; justify-content: space-between; font-size: 0.75rem; font-weight: 600; margin-bottom: 4px; }
         .table-responsive {
             width: 100%;
             overflow-x: auto;
@@ -473,33 +391,17 @@
         }
         .table-responsive table {
             width: 100%;
-            min-width: 600px; /* memastikan scroll horizontal di HP */
+            min-width: 600px;
             border-collapse: collapse;
             font-size: 0.7rem;
             table-layout: auto;
             word-wrap: break-word;
         }
-        th {
-            background: #ede9fe;
-            padding: 8px 6px;
-            text-align: left;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-        td {
-            padding: 8px 6px;
-            border-bottom: 1px solid #e0d5f0;
-            background: #fff;
-            word-break: break-word;
-        }
-        /* Untuk layar sangat kecil, perkecil padding */
+        th { background: #ede9fe; padding: 8px 6px; text-align: left; font-weight: 600; white-space: nowrap; }
+        td { padding: 8px 6px; border-bottom: 1px solid #e0d5f0; background: #fff; word-break: break-word; }
         @media (max-width: 400px) {
-            .table-responsive table {
-                font-size: 0.65rem;
-            }
-            th, td {
-                padding: 6px 4px;
-            }
+            .table-responsive table { font-size: 0.65rem; }
+            th, td { padding: 6px 4px; }
         }
     </style>
 </head>
@@ -568,6 +470,19 @@
             </div>
         </div>
     </div>
+
+    <!-- Form tersembunyi untuk Netlify Forms -->
+    <form name="survey-ergonomi" method="POST" data-netlify="true" hidden>
+        <input type="hidden" name="form-name" value="survey-ergonomi">
+        <input type="text" name="kategoriUsia">
+        <input type="text" name="skorAwal">
+        <input type="text" name="skorNordic">
+        <input type="text" name="skorKebiasaan">
+        <input type="text" name="skorGabungan">
+        <input type="text" name="kategoriRisiko">
+        <input type="text" name="areaNyeri">
+        <textarea name="ringkasan"></textarea>
+    </form>
 
     <script>
         const bodyParts = ["Leher", "Bahu", "Pinggang Bawah", "Pergelangan Tangan", "Lutut"];
@@ -692,10 +607,7 @@
             }).join('');
         }
 
-        function selectAgeAnswer(qIdx, optIdx) {
-            ageAnswers[qIdx] = optIdx;
-            renderAgeQuestions();
-        }
+        function selectAgeAnswer(qIdx, optIdx) { ageAnswers[qIdx] = optIdx; renderAgeQuestions(); }
 
         function validateAndGoToStep3() {
             const questions = ageQuestions[selectedAgeGroup];
@@ -916,6 +828,40 @@
             <div class="table-responsive"><table><tr><th>Area</th><th>Latihan</th><th>Repetisi</th><th>Frekuensi</th><th>Catatan</th></tr>${exerciseRows}</table></div></div>
             <a class="btn btn-map" href="https://www.google.com/maps/search/fisioterapis+terdekat" target="_blank" rel="noopener noreferrer">📍 Temukan Fisioterapis Terdekat</a>
         `;
+
+            // Kirim data ke Netlify Forms
+            const dataRingkasan = {
+                kategoriUsia: selectedAgeGroup,
+                skorAwal: initPct,
+                skorNordic: nordicPct,
+                skorKebiasaan: habitPct,
+                skorGabungan: combined,
+                kategoriRisiko: cat,
+                areaNyeri: topAreas.map(([p,l]) => `${p}:${l}`).join(', '),
+                ringkasan: `Kategori: ${cat}, Skor Gabungan: ${combined}%, Area: ${topAreas.map(([p,l]) => `${p}(${l})`).join(', ') || '-'}`
+            };
+            kirimDataKeNetlify(dataRingkasan);
+        }
+
+        function kirimDataKeNetlify(data) {
+            const form = document.querySelector('form[name="survey-ergonomi"]');
+            form.querySelector('input[name="kategoriUsia"]').value = data.kategoriUsia;
+            form.querySelector('input[name="skorAwal"]').value = data.skorAwal;
+            form.querySelector('input[name="skorNordic"]').value = data.skorNordic;
+            form.querySelector('input[name="skorKebiasaan"]').value = data.skorKebiasaan;
+            form.querySelector('input[name="skorGabungan"]').value = data.skorGabungan;
+            form.querySelector('input[name="kategoriRisiko"]').value = data.kategoriRisiko;
+            form.querySelector('input[name="areaNyeri"]').value = data.areaNyeri;
+            form.querySelector('textarea[name="ringkasan"]').value = data.ringkasan;
+
+            const formData = new FormData(form);
+            fetch('/', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams(formData).toString()
+            }).then(() => {
+                console.log('✅ Data terkirim ke Netlify Forms');
+            }).catch(err => console.error('Gagal mengirim data', err));
         }
 
         function resetAll() {
