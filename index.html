@@ -461,27 +461,45 @@
             font-weight: 600;
             margin-bottom: 4px;
         }
-        table {
+
+        /* ========== TABEL RESPONSIF ========== */
+        .table-responsive {
             width: 100%;
-            border-collapse: collapse;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
             margin: 12px 0;
+            border-radius: 10px;
+            border: 1px solid var(--border);
+        }
+        .table-responsive table {
+            width: 100%;
+            min-width: 600px; /* memastikan scroll horizontal di HP */
+            border-collapse: collapse;
             font-size: 0.7rem;
+            table-layout: auto;
+            word-wrap: break-word;
         }
         th {
             background: #ede9fe;
             padding: 8px 6px;
             text-align: left;
             font-weight: 600;
+            white-space: nowrap;
         }
         td {
             padding: 8px 6px;
             border-bottom: 1px solid #e0d5f0;
             background: #fff;
+            word-break: break-word;
         }
-        .table-responsive {
-            width: 100%;
-            overflow-x: auto;
-            -webkit-overflow-scrolling: touch;
+        /* Untuk layar sangat kecil, perkecil padding */
+        @media (max-width: 400px) {
+            .table-responsive table {
+                font-size: 0.65rem;
+            }
+            th, td {
+                padding: 6px 4px;
+            }
         }
     </style>
 </head>
@@ -655,8 +673,7 @@
             updateHeaderIcon();
             if (step === 2) renderAgeQuestions();
             if (step === 3) renderInitialResult();
-            if (step === 4) { renderNordic();
-                renderHabits(); }
+            if (step === 4) { renderNordic(); renderHabits(); }
             if (step === 5) renderFinalSummary();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
@@ -668,7 +685,7 @@
 
         function renderAgeQuestions() {
             const questions = ageQuestions[selectedAgeGroup] || [];
-            document.getElementById('ageLabelDisplay').textContent = { remaja: 'Remaja', 'dewasa-muda': 'Dewasa Muda', dewasa: 'Dewasa', senior: 'Senior' } [selectedAgeGroup];
+            document.getElementById('ageLabelDisplay').textContent = { remaja: 'Remaja', 'dewasa-muda': 'Dewasa Muda', dewasa: 'Dewasa', senior: 'Senior' }[selectedAgeGroup];
             document.getElementById('ageQuestionsContainer').innerHTML = questions.map((q, idx) => {
                 const sel = ageAnswers[idx];
                 return `<div id="age-q-${idx}" style="margin-bottom:16px;"><p style="font-weight:600; font-size:0.8rem; margin-bottom:5px;">${q.q}</p><div class="option-grid">${q.opts.map((opt, optIdx) => `<div class="option-item${sel === optIdx ? ' selected-option' : ''}" onclick="selectAgeAnswer(${idx}, ${optIdx})">${opt}</div>`).join('')}</div></div>`;
@@ -722,8 +739,7 @@
 
         function renderInitialResult() {
             const questions = ageQuestions[selectedAgeGroup];
-            let total = 0,
-                max = 0;
+            let total = 0, max = 0;
             questions.forEach((q, i) => {
                 const answerIndex = ageAnswers[i] || 0;
                 total += q.w[answerIndex];
@@ -764,8 +780,7 @@
                             { name: 'Nyeri Muskuloskeletal', pct: Math.min(100, Math.round((safe(1) / 6) * 100)) },
                             { name: 'Stres & Pemulihan', pct: Math.min(100, Math.round(((safe(4) + safe(5)) / 10) * 100)) }
                         ];
-                    default:
-                        return [];
+                    default: return [];
                 }
             })();
 
@@ -774,14 +789,14 @@
                 'dewasa-muda': 'Di usia produktif, durasi duduk dan pengaturan workstation yang kurang ergonomis menjadi faktor utama.',
                 'dewasa': 'Pada usia dewasa, akumulasi kelelahan dan stres kerja memperburuk risiko muskuloskeletal.',
                 'senior': 'Untuk senior, faktor seperti pencahayaan, kekuatan otot, dan pemulihan menjadi krusial.'
-            } [selectedAgeGroup] || '';
+            }[selectedAgeGroup] || '';
 
             const recommendations = {
                 'remaja': ['Kurangi penggunaan gadget maksimal 2 jam non-stop', 'Gunakan meja belajar yang ergonomis', 'Lakukan peregangan leher dan bahu setiap 30 menit', 'Olahraga minimal 3 kali seminggu'],
                 'dewasa-muda': ['Atur monitor sejajar mata', 'Gunakan kursi dengan sandaran lumbar', 'Lakukan peregangan setiap 1 jam', 'Olahraga rutin minimal 2 kali seminggu'],
                 'dewasa': ['Evaluasi workstation secara menyeluruh', 'Terapkan jadwal istirahat pendek setiap 45 menit', 'Kelola stres dengan teknik relaksasi', 'Pertimbangkan fisioterapi preventif'],
                 'senior': ['Pastikan pencahayaan ruangan cukup terang', 'Lakukan latihan keseimbangan setiap pagi', 'Gunakan alat bantu jika diperlukan', 'Istirahat cukup dan jaga kualitas tidur']
-            } [selectedAgeGroup] || [];
+            }[selectedAgeGroup] || [];
 
             const exerciseTable = [
                 { area: 'Leher', name: 'Chin Tuck', reps: '10x', freq: '3x/hari', note: 'Tarik dagu lurus ke belakang, tahan 3 detik' },
@@ -819,8 +834,7 @@
             updateSummary();
         }
 
-        function setPain(part, level) { bodyData[part] = level;
-            renderNordic(); }
+        function setPain(part, level) { bodyData[part] = level; renderNordic(); }
 
         function updateSummary() {
             const sel = Object.entries(bodyData).filter(([, v]) => v > 0);
@@ -834,23 +848,18 @@
             }).join('');
         }
 
-        function selectHabit(id, idx) { habitData[id] = idx;
-            renderHabits(); }
+        function selectHabit(id, idx) { habitData[id] = idx; renderHabits(); }
 
         function renderFinalSummary() {
             if (!selectedAgeGroup) { document.getElementById('finalSummaryContent').innerHTML = '<p>Error. Silakan ulangi.</p>'; return; }
             const aq = ageQuestions[selectedAgeGroup];
-            let initScore = 0,
-                initMax = 0;
-            aq.forEach((q, i) => { initScore += q.w[ageAnswers[i] || 0];
-                initMax += Math.max(...q.w); });
+            let initScore = 0, initMax = 0;
+            aq.forEach((q, i) => { initScore += q.w[ageAnswers[i] || 0]; initMax += Math.max(...q.w); });
             const initPct = Math.round((initScore / initMax) * 100);
             const nordicScore = Object.values(bodyData).reduce((a, b) => a + b, 0);
             const nordicPct = Math.round((nordicScore / (bodyParts.length * 4)) * 100);
-            let habitScore = 0,
-                habitMax = 0;
-            habitQuestions.forEach(q => { habitScore += q.w[habitData[q.id] || 0];
-                habitMax += Math.max(...q.w); });
+            let habitScore = 0, habitMax = 0;
+            habitQuestions.forEach(q => { habitScore += q.w[habitData[q.id] || 0]; habitMax += Math.max(...q.w); });
             const habitPct = Math.round((habitScore / habitMax) * 100);
             const combined = Math.round(initPct * 0.3 + nordicPct * 0.4 + habitPct * 0.3);
             const { cat, badge } = getScoreCategory(combined);
@@ -883,7 +892,6 @@
             });
             if (!exerciseRows) exerciseRows = '<tr><td colspan="5">Tidak ada area spesifik</td></tr>';
 
-            // Tabel rekomendasi pemeriksaan fisioterapi
             let physioExamRows = '';
             topAreas.forEach(([part]) => {
                 const exam = physioExamRecommendations[part];
