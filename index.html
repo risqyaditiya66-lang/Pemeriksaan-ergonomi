@@ -257,6 +257,11 @@
             border-color: #7c3aed;
             box-shadow: 0 0 0 4px rgba(124, 58, 237, 0.06);
         }
+        .highlight-error {
+            border: 2px solid #e07a6e !important;
+            background: #fff5f5 !important;
+            box-shadow: 0 0 0 4px rgba(224, 122, 110, 0.15) !important;
+        }
         .btn-group {
             display: flex;
             gap: 8px;
@@ -508,7 +513,7 @@
             <div id="ageQuestionsContainer"></div>
             <div class="btn-group">
                 <button class="btn btn-secondary" onclick="goToStep(1)">← Kembali</button>
-                <button class="btn btn-primary" onclick="calculateInitialResult()">Lihat Hasil Awal →</button>
+                <button class="btn btn-primary" onclick="validateAndGoToStep3()">Lihat Hasil Awal →</button>
             </div>
         </div>
 
@@ -531,7 +536,7 @@
             <div id="habitContainer"></div>
             <div class="btn-group">
                 <button class="btn btn-secondary" onclick="goToStep(3)">← Kembali</button>
-                <button class="btn btn-primary" onclick="goToFinalSummary()">Lihat Rangkuman Akhir →</button>
+                <button class="btn btn-primary" onclick="validateAndGoToStep5()">Lihat Rangkuman Akhir →</button>
             </div>
         </div>
 
@@ -592,6 +597,14 @@
             { id: 'olahraga', emoji: '🏃', q: 'Olahraga per minggu?', opts: ['≥3 kali', '1-2 kali', 'Kadang-kadang', 'Tidak pernah'], w: [0, 2, 4, 5] }
         ];
 
+        const physioExamRecommendations = {
+            'Leher': { exam: 'Cervical Spine Assessment', desc: 'Evaluasi range of motion, nyeri tekan, dan tes Spurling' },
+            'Bahu': { exam: 'Shoulder Impingement Test', desc: 'Tes untuk mendeteksi sindrom impingement bahu' },
+            'Pinggang Bawah': { exam: 'Straight Leg Raise Test', desc: 'Tes untuk mendeteksi herniasi diskus lumbal' },
+            'Pergelangan Tangan': { exam: 'Phalen\'s Test & Tinel\'s Sign', desc: 'Tes untuk mendeteksi carpal tunnel syndrome' },
+            'Lutut': { exam: 'Anterior Drawer Test & McMurray Test', desc: 'Tes stabilitas ligamen dan meniskus lutut' }
+        };
+
         let currentStep = 1;
         let selectedAgeGroup = null;
         let ageAnswers = {};
@@ -635,11 +648,6 @@
         function updateHeaderIcon() { document.getElementById('headerIcon').textContent = headerIcons[currentStep] || '🧘'; }
 
         function goToStep(step) {
-            if (step === 2 && !selectedAgeGroup) { document.getElementById('errUsia').classList.add('show'); return; }
-            if (step === 5 && currentStep === 4) {
-                if (Object.values(bodyData).filter(v => v > 0).length < 2) { alert('Minimal pilih 2 area dengan tingkat nyeri ≥1.'); return; }
-                if (habitQuestions.some(q => habitData[q.id] === undefined)) { alert('Harap jawab semua pertanyaan kebiasaan kerja.'); return; }
-            }
             ['section1', 'section2', 'section3', 'section4', 'section5'].forEach(id => document.getElementById(id).classList.add('hidden'));
             document.getElementById('section' + step).classList.remove('hidden');
             currentStep = step;
@@ -653,25 +661,56 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
-        function goToAgeQuestions() { if (!selectedAgeGroup) { document.getElementById('errUsia').classList.add('show'); } else goToStep(2); }
+        function goToAgeQuestions() {
+            if (!selectedAgeGroup) { document.getElementById('errUsia').classList.add('show'); return; }
+            goToStep(2);
+        }
 
         function renderAgeQuestions() {
             const questions = ageQuestions[selectedAgeGroup] || [];
-            document.getElementById('ageLabelDisplay').textContent = { remaja: 'Remaja', 'dewasa-muda': 'Dewasa Muda', dewasa: 'Dewasa', senior: 'Senior' } [
-                selectedAgeGroup
-            ];
+            document.getElementById('ageLabelDisplay').textContent = { remaja: 'Remaja', 'dewasa-muda': 'Dewasa Muda', dewasa: 'Dewasa', senior: 'Senior' } [selectedAgeGroup];
             document.getElementById('ageQuestionsContainer').innerHTML = questions.map((q, idx) => {
                 const sel = ageAnswers[idx];
-                return `<div style="margin-bottom:16px;"><p style="font-weight:600; font-size:0.8rem; margin-bottom:5px;">${q.q}</p><div class="option-grid">${q.opts.map((opt, optIdx) => `<div class="option-item${sel === optIdx ? ' selected-option' : ''}" onclick="selectAgeAnswer(${idx}, ${optIdx})">${opt}</div>`).join('')}</div></div>`;
+                return `<div id="age-q-${idx}" style="margin-bottom:16px;"><p style="font-weight:600; font-size:0.8rem; margin-bottom:5px;">${q.q}</p><div class="option-grid">${q.opts.map((opt, optIdx) => `<div class="option-item${sel === optIdx ? ' selected-option' : ''}" onclick="selectAgeAnswer(${idx}, ${optIdx})">${opt}</div>`).join('')}</div></div>`;
             }).join('');
         }
 
-        function selectAgeAnswer(qIdx, optIdx) { ageAnswers[qIdx] = optIdx;
-            renderAgeQuestions(); }
+        function selectAgeAnswer(qIdx, optIdx) {
+            ageAnswers[qIdx] = optIdx;
+            renderAgeQuestions();
+        }
 
-        function calculateInitialResult() {
-            if (ageQuestions[selectedAgeGroup].some((_, i) => ageAnswers[i] === undefined)) { alert('Harap jawab semua pertanyaan.'); return; }
+        function validateAndGoToStep3() {
+            const questions = ageQuestions[selectedAgeGroup];
+            const unansweredIdx = questions.findIndex((_, i) => ageAnswers[i] === undefined);
+            if (unansweredIdx !== -1) {
+                const element = document.getElementById('age-q-' + unansweredIdx);
+                if (element) {
+                    element.classList.add('highlight-error');
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => element.classList.remove('highlight-error'), 2000);
+                }
+                return;
+            }
             goToStep(3);
+        }
+
+        function validateAndGoToStep5() {
+            if (Object.values(bodyData).filter(v => v > 0).length < 2) {
+                alert('Minimal pilih 2 area dengan tingkat nyeri ≥1.');
+                return;
+            }
+            const unansweredHabit = habitQuestions.find(q => habitData[q.id] === undefined);
+            if (unansweredHabit) {
+                const element = document.getElementById('habit-' + unansweredHabit.id);
+                if (element) {
+                    element.classList.add('highlight-error');
+                    element.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    setTimeout(() => element.classList.remove('highlight-error'), 2000);
+                }
+                return;
+            }
+            goToStep(5);
         }
 
         function getScoreCategory(percent) {
@@ -731,10 +770,10 @@
             })();
 
             const analysisLong = {
-                'remaja': 'Sebagai remaja, risiko utama berasal dari postur belajar yang buruk dan penggunaan gadget berlebihan. Perbaiki posisi duduk, batasi waktu menatap layar, dan lakukan peregangan ringan setiap 30 menit.',
-                'dewasa-muda': 'Di usia produktif, durasi duduk dan pengaturan workstation yang kurang ergonomis menjadi faktor utama. Prioritaskan peregangan, kursi dengan sandaran lumbar, dan olahraga teratur.',
-                'dewasa': 'Pada usia dewasa, akumulasi kelelahan dan stres kerja memperburuk risiko muskuloskeletal. Evaluasi mendalam terhadap postur, beban kerja, dan manajemen stres sangat disarankan.',
-                'senior': 'Untuk senior, faktor seperti pencahayaan, kekuatan otot, dan pemulihan menjadi krusial. Modifikasi lingkungan kerja, latihan keseimbangan, dan istirahat teratur sangat penting.'
+                'remaja': 'Sebagai remaja, risiko utama berasal dari postur belajar yang buruk dan penggunaan gadget berlebihan.',
+                'dewasa-muda': 'Di usia produktif, durasi duduk dan pengaturan workstation yang kurang ergonomis menjadi faktor utama.',
+                'dewasa': 'Pada usia dewasa, akumulasi kelelahan dan stres kerja memperburuk risiko muskuloskeletal.',
+                'senior': 'Untuk senior, faktor seperti pencahayaan, kekuatan otot, dan pemulihan menjadi krusial.'
             } [selectedAgeGroup] || '';
 
             const recommendations = {
@@ -755,11 +794,7 @@
                 let barClass = 'domain-low';
                 if (d.pct > 55) barClass = 'domain-high';
                 else if (d.pct > 25) barClass = 'domain-mid';
-                return `
-                <div class="domain-item">
-                    <div class="domain-label"><span>${d.name}</span><span>${d.pct}%</span></div>
-                    <div class="domain-bar-bg"><div class="domain-bar-fill ${barClass}" style="width:${d.pct}%;"></div></div>
-                </div>`;
+                return `<div class="domain-item"><div class="domain-label"><span>${d.name}</span><span>${d.pct}%</span></div><div class="domain-bar-bg"><div class="domain-bar-fill ${barClass}" style="width:${d.pct}%;"></div></div></div>`;
             }).join('');
 
             document.getElementById('initialResultContent').innerHTML = `
@@ -771,7 +806,6 @@
             <div class="table-responsive"><table><tr><th>Area</th><th>Latihan</th><th>Repetisi</th><th>Frekuensi</th><th>Catatan</th></tr>
             ${exerciseTable.map(e => `<tr><td>${e.area}</td><td>${e.name}</td><td>${e.reps}</td><td>${e.freq}</td><td>${e.note}</td></tr>`).join('')}</table></div></div>
             <a class="btn btn-map" href="https://www.google.com/maps/search/fisioterapis+terdekat" target="_blank" rel="noopener noreferrer">📍 Temukan Fisioterapis Terdekat</a>
-            <p style="font-size:0.65rem; margin-top:8px;">* Klik untuk membuka Google Maps</p>
         `;
         }
 
@@ -779,8 +813,7 @@
             document.getElementById('nordicGrid').innerHTML = bodyParts.map(part => {
                 const level = bodyData[part];
                 let dots = '';
-                for (let i = 0; i <= 4; i++) dots +=
-                    `<span class="pain-dot${level === i ? ' active-dot' : ''}" onclick="event.stopPropagation(); setPain('${part}', ${i})">${i}</span>`;
+                for (let i = 0; i <= 4; i++) dots += `<span class="pain-dot${level === i ? ' active-dot' : ''}" onclick="event.stopPropagation(); setPain('${part}', ${i})">${i}</span>`;
                 return `<div class="nordic-item${level>0?' active-nordic':''}"><span style="flex:1;">${part}</span><div class="pain-selector">${dots}</div></div>`;
             }).join('');
             updateSummary();
@@ -791,25 +824,18 @@
 
         function updateSummary() {
             const sel = Object.entries(bodyData).filter(([, v]) => v > 0);
-            document.getElementById('selectedSummary').innerHTML = sel.length ? sel.map(([p, l]) =>
-                `<span class="summary-badge">${p} (${l})</span>`).join(' ') : '🔍 Belum ada area dipilih';
+            document.getElementById('selectedSummary').innerHTML = sel.length ? sel.map(([p, l]) => `<span class="summary-badge">${p} (${l})</span>`).join(' ') : '🔍 Belum ada area dipilih';
         }
 
         function renderHabits() {
             document.getElementById('habitContainer').innerHTML = '<h4 style="margin-bottom:8px;">Kebiasaan Kerja</h4>' + habitQuestions.map(q => {
                 const sel = habitData[q.id];
-                return `<div style="margin-bottom:14px;"><p style="font-weight:600; font-size:0.8rem;">${q.emoji} ${q.q}</p><div class="option-grid">${q.opts.map((opt, idx) => `<div class="option-item${sel===idx?' selected-option':''}" onclick="selectHabit('${q.id}', ${idx})">${opt}</div>`).join('')}</div></div>`;
+                return `<div id="habit-${q.id}" style="margin-bottom:14px;"><p style="font-weight:600; font-size:0.8rem;">${q.emoji} ${q.q}</p><div class="option-grid">${q.opts.map((opt, idx) => `<div class="option-item${sel===idx?' selected-option':''}" onclick="selectHabit('${q.id}', ${idx})">${opt}</div>`).join('')}</div></div>`;
             }).join('');
         }
 
         function selectHabit(id, idx) { habitData[id] = idx;
             renderHabits(); }
-
-        function goToFinalSummary() {
-            if (Object.values(bodyData).filter(v => v > 0).length < 2) { alert('Minimal pilih 2 area dengan tingkat nyeri ≥1.'); return; }
-            if (habitQuestions.some(q => habitData[q.id] === undefined)) { alert('Harap jawab semua pertanyaan kebiasaan kerja.'); return; }
-            goToStep(5);
-        }
 
         function renderFinalSummary() {
             if (!selectedAgeGroup) { document.getElementById('finalSummaryContent').innerHTML = '<p>Error. Silakan ulangi.</p>'; return; }
@@ -830,8 +856,6 @@
             const { cat, badge } = getScoreCategory(combined);
 
             const topAreas = Object.entries(bodyData).filter(([, v]) => v > 0).sort((a, b) => b[1] - a[1]).slice(0, 3);
-            const topHtml = topAreas.length ? topAreas.map(([p, l]) => `<span class="summary-badge">${p} (${l})</span>`).join(' ') :
-                'Tidak ada';
 
             let areaRows = '';
             bodyParts.forEach(part => {
@@ -839,8 +863,7 @@
                 if (level > 0) {
                     const areaPct = Math.round((level / 4) * 100);
                     let interpretation = areaPct <= 30 ? 'Ringan' : areaPct <= 60 ? 'Sedang' : 'Berat';
-                    areaRows +=
-                        `<tr><td>${part}</td><td>${level}</td><td>${areaPct}%</td><td>${interpretation}</td></tr>`;
+                    areaRows += `<tr><td>${part}</td><td>${level}</td><td>${areaPct}%</td><td>${interpretation}</td></tr>`;
                 }
             });
             if (!areaRows) areaRows = '<tr><td colspan="4">Tidak ada area dengan nyeri</td></tr>';
@@ -849,18 +872,24 @@
                 'Leher': { name: 'Chin Tuck', reps: '10x', freq: '3x/hari', note: 'Tarik dagu lurus ke belakang' },
                 'Bahu': { name: 'Shoulder Rolls', reps: '10x bolak-balik', freq: 'Setiap jam', note: 'Putar bahu ke depan & belakang' },
                 'Pinggang Bawah': { name: 'Pelvic Tilt', reps: '15x', freq: 'Pagi & malam', note: 'Sambil berbaring, kencangkan perut' },
-                'Pergelangan Tangan': { name: 'Wrist Flexor Stretch', reps: 'Tahan 30 detik', freq: '4x/hari',
-                    note: 'Luruskan lengan, tarik jari ke belakang' },
+                'Pergelangan Tangan': { name: 'Wrist Flexor Stretch', reps: 'Tahan 30 detik', freq: '4x/hari', note: 'Luruskan lengan, tarik jari ke belakang' },
                 'Lutut': { name: 'Quadriceps Set', reps: '12x tiap kaki', freq: '2x/hari', note: 'Duduk, luruskan kaki, tahan 5 detik' }
             };
 
             let exerciseRows = '';
             topAreas.forEach(([part]) => {
                 const ex = exerciseTable[part];
-                if (ex) exerciseRows +=
-                    `<tr><td>${part}</td><td>${ex.name}</td><td>${ex.reps}</td><td>${ex.freq}</td><td>${ex.note}</td></tr>`;
+                if (ex) exerciseRows += `<tr><td>${part}</td><td>${ex.name}</td><td>${ex.reps}</td><td>${ex.freq}</td><td>${ex.note}</td></tr>`;
             });
             if (!exerciseRows) exerciseRows = '<tr><td colspan="5">Tidak ada area spesifik</td></tr>';
+
+            // Tabel rekomendasi pemeriksaan fisioterapi
+            let physioExamRows = '';
+            topAreas.forEach(([part]) => {
+                const exam = physioExamRecommendations[part];
+                if (exam) physioExamRows += `<tr><td>${part}</td><td>${exam.exam}</td><td>${exam.desc}</td></tr>`;
+            });
+            if (!physioExamRows) physioExamRows = '<tr><td colspan="3">Tidak ada pemeriksaan khusus yang disarankan</td></tr>';
 
             document.getElementById('finalSummaryContent').innerHTML = `
             <p style="font-weight:600;">Kategori Usia: <span style="color:#7c3aed;">${selectedAgeGroup}</span></p>
@@ -870,13 +899,14 @@
                 <div><strong>${habitPct}</strong><br><small>Kebiasaan</small></div>
             </div>
             <div class="score-circle">${combined}</div><p>Skor Gabungan</p><span class="badge ${badge}">${cat}</span>
-            <div class="analysis-block"><h4>📋 Kesimpulan Akhir</h4><p>Berdasarkan skrining usia, peta nyeri, dan kebiasaan, Anda masuk kategori <strong>${cat}</strong>. Area paling bermasalah: ${topHtml || 'tidak ada'}. Kombinasi latihan dan penyesuaian ergonomi sangat dianjurkan.</p></div>
+            <div class="analysis-block"><h4>📋 Kesimpulan Akhir</h4><p>Berdasarkan skrining usia, peta nyeri, dan kebiasaan, Anda masuk kategori <strong>${cat}</strong>. Area paling bermasalah: ${topAreas.map(([p,l]) => `<span class="summary-badge">${p} (${l})</span>`).join(' ') || 'tidak ada'}.</p></div>
             <div class="analysis-block"><h4>📊 Analisis Area Nyeri (Persentase)</h4>
             <div class="table-responsive"><table><tr><th>Area</th><th>Skor</th><th>Persentase</th><th>Interpretasi</th></tr>${areaRows}</table></div></div>
+            <div class="analysis-block"><h4>🩺 Rekomendasi Pemeriksaan Fisioterapi</h4>
+            <div class="table-responsive"><table><tr><th>Area</th><th>Pemeriksaan</th><th>Keterangan</th></tr>${physioExamRows}</table></div></div>
             <div class="analysis-block"><h4>🏋️ Tabel Latihan Fisioterapi di Rumah</h4>
             <div class="table-responsive"><table><tr><th>Area</th><th>Latihan</th><th>Repetisi</th><th>Frekuensi</th><th>Catatan</th></tr>${exerciseRows}</table></div></div>
             <a class="btn btn-map" href="https://www.google.com/maps/search/fisioterapis+terdekat" target="_blank" rel="noopener noreferrer">📍 Temukan Fisioterapis Terdekat</a>
-            <p style="font-size:0.65rem; margin-top:8px;">* Klik untuk membuka Google Maps</p>
         `;
         }
 
