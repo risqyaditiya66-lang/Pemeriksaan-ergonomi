@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Ergonomi 5 Langkah · Nordic Body Map</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700;14..32,800&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
         :root {
             --bg: #f9f7fd; --surface: #ffffff; --primary: #7c3aed; --primary-light: #ede9fe;
@@ -48,7 +49,7 @@
         .section-head h2 { font-size: 1rem; font-weight: 700; color: var(--text); }
         .section-desc { color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 14px; line-height: 1.5; }
         .age-list { display: flex; flex-direction: column; gap: 14px; margin-bottom: 14px; }
-        .age-card { background: #faf8fd; border: 2px solid #e0d5f0; border-radius: 20px; padding: 18px 16px; display: flex; align-items: center; gap: 16px; cursor: pointer; transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1.2); touch-action: manipulation; user-select: none; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+        .age-card { background: #faf8fd; border: 2px solid #e0d5f0; border-radius: 20px; padding: 18px 16px; display: flex; align-items: center; gap: 16px; cursor: pointer; transition: all 0.3s; touch-action: manipulation; user-select: none; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
         .age-card:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(124, 58, 237, 0.12); border-color: #c4b5fd; }
         .age-card:active { background: #f3e8ff; transform: scale(0.97); }
         .age-card.selected-age { border-color: #7c3aed; background: #ede9fe; box-shadow: 0 0 0 6px rgba(124, 58, 237, 0.08); }
@@ -67,7 +68,7 @@
         .btn-primary { background: #7c3aed; color: #fff; box-shadow: 0 6px 18px rgba(124, 58, 237, 0.25); } .btn-primary:active { background: #6d28d9; transform: scale(0.97); }
         .btn-secondary { background: #fff; color: #7c3aed; border: 2px solid #ddd0f0; } .btn-accent { background: #a855f7; color: #fff; box-shadow: 0 6px 18px rgba(168, 85, 247, 0.25); }
         .btn-outline { background: transparent; border: 2px solid #d5c8e8; color: #5b3d8a; } .btn-map { background: #2d1b4e; color: #fff; box-shadow: 0 6px 18px rgba(45, 27, 78, 0.25); width: 100%; margin-top: 12px; }
-        .btn-download { background: #1e8449; color: #fff; box-shadow: 0 6px 18px rgba(30, 132, 73, 0.25); width: 100%; margin-top: 12px; }
+        .btn-download { background: #b45389; color: #fff; box-shadow: 0 6px 18px rgba(180, 83, 137, 0.25); width: 100%; margin-top: 12px; }
         .score-circle { font-size: 3rem; font-weight: 800; background: linear-gradient(135deg, #7c3aed, #a855f7); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; line-height: 1; }
         .badge { display: inline-block; padding: 6px 18px; border-radius: 30px; font-weight: 700; font-size: 0.78rem; }
         .badge-low { background: #dcefe0; color: #1e4a2c; } .badge-med { background: #fdf0d5; color: #6b4f1c; } .badge-high { background: #fde0d8; color: #7a3020; } .badge-severe { background: #f5cec6; color: #521f14; }
@@ -222,7 +223,7 @@
     let ageAnswers = {};
     let bodyData = Object.fromEntries(bodyParts.map(p => [p, 0]));
     let habitData = {};
-    let finalData = null; // untuk menyimpan data hasil akhir agar bisa di-download
+    let finalData = null;
 
     const headerIcons = { 1: '🧑‍💼', 2: '💬', 3: '📊', 4: '🔍', 5: '🏁' };
 
@@ -506,7 +507,7 @@
         <div class="analysis-block"><h4>🩺 Pemeriksaan Fisioterapi</h4><div class="table-responsive"><table><tr><th>Area</th><th>Pemeriksaan</th><th>Keterangan</th></tr>${physioRows}</table></div></div>
         <div class="analysis-block"><h4>🏋️ Latihan di Rumah</h4><div class="table-responsive"><table><tr><th>Area</th><th>Latihan</th><th>Rep</th><th>Frek</th><th>Catatan</th></tr>${exRows}</table></div></div>
         <a class="btn btn-map" href="https://www.google.com/maps/search/fisioterapis+terdekat" target="_blank">📍 Temukan Fisioterapis Terdekat</a>
-        <button class="btn btn-download" onclick="downloadCSV()">📥 Download Hasil (CSV)</button>
+        <button class="btn btn-download" onclick="downloadPDF()">📄 Download Hasil (PDF)</button>
         `;
 
         // Kirim ke Netlify
@@ -520,82 +521,119 @@
         kirimDataKeNetlify(netlifyData);
     }
 
-    function downloadCSV() {
+    function downloadPDF() {
         if (!finalData) return;
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+        let y = 15;
+        const lineHeight = 6;
+        const leftMargin = 15;
+        const pageWidth = 190;
 
-        const rows = [];
-        // Header
-        rows.push(['PEMERIKSAAN ERGONOMI - RANGKUMAN HASIL']);
-        rows.push(['']);
-        rows.push(['Kategori Usia', finalData.kategoriUsia]);
-        rows.push(['Skor Skrining Awal', finalData.skorAwal + '%']);
-        rows.push(['Skor Area Nyeri (Nordic)', finalData.skorNordic + '%']);
-        rows.push(['Skor Kebiasaan Kerja', finalData.skorKebiasaan + '%']);
-        rows.push(['Skor Gabungan', finalData.skorGabungan + '%']);
-        rows.push(['Kategori Risiko', finalData.kategoriRisiko]);
-        rows.push(['']);
-        rows.push(['ANALISIS AREA NYERI']);
-        rows.push(['Area', 'Skor', 'Persentase', 'Interpretasi']);
+        // Judul
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(16);
+        doc.text('Hasil Pemeriksaan Ergonomi', leftMargin, y);
+        y += 8;
+        doc.setFontSize(10);
+        doc.setFont('helvetica', 'normal');
+        doc.text(`Tanggal: ${new Date().toLocaleDateString('id-ID')}`, leftMargin, y);
+        y += 8;
+
+        // Ringkasan
+        doc.setFontSize(11);
+        doc.setFont('helvetica', 'bold');
+        doc.text('Ringkasan', leftMargin, y);
+        y += lineHeight;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.text(`Kategori Usia: ${finalData.kategoriUsia}`, leftMargin, y); y += lineHeight;
+        doc.text(`Skor Skrining: ${finalData.skorAwal}% | Area: ${finalData.skorNordic}% | Kebiasaan: ${finalData.skorKebiasaan}%`, leftMargin, y); y += lineHeight;
+        doc.text(`Skor Gabungan: ${finalData.skorGabungan}% — ${finalData.kategoriRisiko}`, leftMargin, y); y += 8;
+
+        // Analisis Area Nyeri
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('Analisis Area Nyeri', leftMargin, y);
+        y += lineHeight;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
         finalData.topAreas.forEach(([part, level]) => {
             const pct = Math.round((level/4)*100);
             const interp = pct <= 30 ? 'Ringan' : pct <= 60 ? 'Sedang' : 'Berat';
-            rows.push([part, level, pct+'%', interp]);
+            doc.text(`${part}: Skor ${level}/4 (${pct}%) - ${interp}`, leftMargin+5, y);
+            y += lineHeight;
         });
-        if (finalData.topAreas.length === 0) rows.push(['Tidak ada', '', '', '']);
+        if (finalData.topAreas.length === 0) { doc.text('Tidak ada area dengan nyeri signifikan.', leftMargin+5, y); y += lineHeight; }
+        y += 4;
 
-        rows.push(['']);
-        rows.push(['ANALISIS KEBIASAAN KERJA']);
-        rows.push(['Aspek', 'Persentase', 'Solusi']);
+        // Analisis Kebiasaan
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('Analisis Kebiasaan Kerja & Solusi', leftMargin, y);
+        y += lineHeight;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
         finalData.habitAnalysis.forEach(h => {
-            rows.push([h.name, h.pct+'%', h.solutions.join('; ')]);
+            if (y > 260) { doc.addPage(); y = 15; }
+            doc.text(`${h.name}: ${h.pct}%`, leftMargin+5, y);
+            y += lineHeight;
+            h.solutions.forEach(s => {
+                if (y > 260) { doc.addPage(); y = 15; }
+                doc.text(`  - ${s}`, leftMargin+8, y);
+                y += lineHeight;
+            });
         });
+        y += 4;
 
-        rows.push(['']);
-        rows.push(['PEMERIKSAAN FISIOTERAPI YANG DISARANKAN']);
-        rows.push(['Area', 'Pemeriksaan', 'Keterangan']);
+        // Pemeriksaan Fisioterapi
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('Pemeriksaan Fisioterapi yang Disarankan', leftMargin, y);
+        y += lineHeight;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
         finalData.topAreas.forEach(([part]) => {
             const e = physioExamRecommendations[part];
-            if (e) rows.push([part, e.exam, e.desc]);
+            if (e) {
+                if (y > 260) { doc.addPage(); y = 15; }
+                doc.text(`${part}: ${e.exam} - ${e.desc}`, leftMargin+5, y);
+                y += lineHeight;
+            }
         });
-        if (finalData.topAreas.length === 0) rows.push(['Tidak ada', '', '']);
+        if (finalData.topAreas.length === 0) { doc.text('Tidak ada pemeriksaan khusus.', leftMargin+5, y); y += lineHeight; }
+        y += 4;
 
-        rows.push(['']);
-        rows.push(['LATIHAN DI RUMAH']);
-        rows.push(['Area', 'Latihan', 'Repetisi', 'Frekuensi', 'Catatan']);
+        // Latihan di Rumah
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(11);
+        doc.text('Latihan di Rumah', leftMargin, y);
+        y += lineHeight;
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        const exTable = {
+            Leher:{name:'Chin Tuck',reps:'10x',freq:'3x/hari',note:'Tarik dagu lurus ke belakang'},
+            Bahu:{name:'Shoulder Rolls',reps:'10x',freq:'Setiap jam',note:'Putar bahu ke depan & belakang'},
+            'Pinggang Bawah':{name:'Pelvic Tilt',reps:'15x',freq:'Pagi & malam',note:'Berbaring, kencangkan perut'},
+            'Pergelangan Tangan':{name:'Wrist Flexor Stretch',reps:'Tahan 30s',freq:'4x/hari',note:'Luruskan lengan, tarik jari'},
+            Lutut:{name:'Quadriceps Set',reps:'12x/kaki',freq:'2x/hari',note:'Duduk, luruskan kaki, tahan 5s'}
+        };
         finalData.topAreas.forEach(([part]) => {
-            const e = {
-                Leher:{name:'Chin Tuck',reps:'10x',freq:'3x/hari',note:'Tarik dagu lurus ke belakang'},
-                Bahu:{name:'Shoulder Rolls',reps:'10x',freq:'Setiap jam',note:'Putar bahu ke depan & belakang'},
-                'Pinggang Bawah':{name:'Pelvic Tilt',reps:'15x',freq:'Pagi & malam',note:'Berbaring, kencangkan perut'},
-                'Pergelangan Tangan':{name:'Wrist Flexor Stretch',reps:'Tahan 30s',freq:'4x/hari',note:'Luruskan lengan, tarik jari'},
-                Lutut:{name:'Quadriceps Set',reps:'12x/kaki',freq:'2x/hari',note:'Duduk, luruskan kaki, tahan 5s'}
-            }[part];
-            if (e) rows.push([part, e.name, e.reps, e.freq, e.note]);
+            const e = exTable[part];
+            if (e) {
+                if (y > 260) { doc.addPage(); y = 15; }
+                doc.text(`${part}: ${e.name} — ${e.reps}, ${e.freq}`, leftMargin+5, y);
+                y += lineHeight;
+                doc.text(`  Catatan: ${e.note}`, leftMargin+8, y);
+                y += lineHeight;
+            }
         });
-        if (finalData.topAreas.length === 0) rows.push(['Tidak ada', '', '', '', '']);
+        if (finalData.topAreas.length === 0) { doc.text('Tidak ada latihan khusus.', leftMargin+5, y); y += lineHeight; }
+        y += 6;
+        doc.setFontSize(8);
+        doc.text('* Hasil skrining awal, bukan diagnosis medis.', leftMargin, y);
 
-        // Konversi ke CSV string
-        let csvContent = '';
-        rows.forEach(row => {
-            const escaped = row.map(cell => {
-                if (typeof cell === 'string' && (cell.includes(',') || cell.includes('"'))) {
-                    return `"${cell.replace(/"/g, '""')}"`;
-                }
-                return cell;
-            });
-            csvContent += escaped.join(',') + '\n';
-        });
-
-        // Buat blob dan download
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
-        const url = URL.createObjectURL(blob);
-        const link = document.createElement('a');
-        link.setAttribute('href', url);
-        link.setAttribute('download', `hasil-ergonomi-${new Date().toISOString().slice(0,10)}.csv`);
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+        doc.save(`hasil-ergonomi-${new Date().toISOString().slice(0,10)}.pdf`);
     }
 
     function kirimDataKeNetlify(data) {
